@@ -9,9 +9,11 @@ import { classes } from '@automapper/classes';
 import { RegionModule } from './master/region/region.module';
 import { CountryModule } from './master/country/country.module';
 import { CompanyModule } from './master/company/company.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot(dataSourceOptions),
     AutomapperModule.forRoot({
       strategyInitializer: classes(),
