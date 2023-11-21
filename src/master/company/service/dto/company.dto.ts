@@ -10,7 +10,12 @@ export class CompanyDTO {
   @AutoMap()
   @IsString()
   @IsNotEmpty()
-  companyName: string;
+  name: string;
+
+  @AutoMap()
+  @IsString()
+  @IsNotEmpty()
+  industry: string;
 
   @AutoMap(() => UserDTO)
   users: UserDTO[];

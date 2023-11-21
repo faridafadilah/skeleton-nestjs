@@ -8,7 +8,11 @@ import { User } from '../../user/entity/user.entity';
 export class Company extends BaseEntity {
   @AutoMap()
   @Column({ type: 'varchar' })
-  companyName: string;
+  name: string;
+
+  @AutoMap()
+  @Column({ type: 'varchar' })
+  industry: string;
 
   @AutoMap(() => User)
   @OneToMany(() => User, (other) => other.company)

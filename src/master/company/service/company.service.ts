@@ -15,7 +15,7 @@ export class CompanyService {
   constructor(
     private readonly companyRepository: CompanyRepository,
     @InjectMapper() private readonly companyMapper: Mapper,
-  ) { }
+  ) {}
 
   async findAll(): Promise<CompanyDTO[]> {
     try {
@@ -24,14 +24,18 @@ export class CompanyService {
       });
       console.log(result);
 
-      const companyDTOs = this.companyMapper.mapArray(result, Company, CompanyDTO);
+      const companyDTOs = this.companyMapper.mapArray(
+        result,
+        Company,
+        CompanyDTO,
+      );
 
       for (const companyDTO of companyDTOs) {
         if (companyDTO.users) {
           companyDTO.users = this.companyMapper.mapArray(
             companyDTO.users as User[],
             User,
-            UserDTO
+            UserDTO,
           );
         } else {
           companyDTO.users = [];
@@ -55,8 +59,12 @@ export class CompanyService {
   }
 
   async save(countryDTO: CompanyCreateDTO): Promise<CompanyDTO | undefined> {
-    const entity = this.companyMapper.map(countryDTO, CompanyCreateDTO, Company);
-    entity.createdBy = "System";
+    const entity = this.companyMapper.map(
+      countryDTO,
+      CompanyCreateDTO,
+      Company,
+    );
+    entity.createdBy = 'System';
     entity.createdDate = new Date();
     const result = await this.companyRepository.save(entity);
     return this.companyMapper.mapAsync(result, Company, CompanyDTO);
