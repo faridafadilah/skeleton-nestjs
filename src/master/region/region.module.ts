@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RegionController } from './controller/region.controller';
-import { RegionRepository } from './repository/region.repository';
-import { RegionService } from './service/region.service';
-import { Region } from 'src/master/region/entity/region.entity';
-import { RegionMapper } from 'src/master/region/service/mapper/region.mapper';
+import { RegionController } from './controllers/region.controller';
+import { RegionRepository } from './repositories/region.repository';
+import { RegionService } from './services/region.service';
+import { Region } from 'src/master/region/entities/region.entity';
+import { RegionMapper } from 'src/master/region/services/mapper/region.mapper';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Region])],
