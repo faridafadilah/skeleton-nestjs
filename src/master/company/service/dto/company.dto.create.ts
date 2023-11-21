@@ -8,5 +8,9 @@ export class CompanyCreateDTO {
 
   @AutoMap()
   @IsString()
-  companyName: string;
+  name: string;
+
+  @AutoMap()
+  @IsString()
+  industry: string;
 }
