@@ -45,6 +45,25 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Migration database
+
+```bash
+# run migration
+$ npm run migration:run
+
+# create migration
+$ npm run migration:create -- src/migrations/${migration_name}
+
+# revert migration
+$ npm run migration:revert
+```
+
+## Eslint
+
+```bash
+$ npm run lint
+```
+
 ## Test
 
 ```bash
