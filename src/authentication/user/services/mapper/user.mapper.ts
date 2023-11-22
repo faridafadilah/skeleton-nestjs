@@ -2,10 +2,11 @@
 import { Mapper, createMap, forMember, ignore } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { User } from 'src/master/user/entities/user.entity';
 import { UserDTO } from '../dto/user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { CreateUserDto } from '../dto/create-user.dto';
+import { RegisterUserDTO } from 'src/authentication/models/register-user.dto';
+import { RegisterAdminDTO } from 'src/authentication/models/register-admin.dto';
+import { User } from '../../entities/user.entity';
 
 @Injectable()
 export class UserMapper extends AutomapperProfile {
@@ -18,12 +19,8 @@ export class UserMapper extends AutomapperProfile {
       createMap(mapper, User, UserDTO);
       createMap(mapper, UserDTO, User);
       createMap(mapper, UpdateUserDto, User);
-      createMap(
-        mapper,
-        CreateUserDto,
-        User,
-        forMember((dest) => dest.id, ignore()),
-      );
+      createMap(mapper, RegisterUserDTO, User, forMember((dest) => dest.id, ignore()));
+      createMap(mapper, RegisterAdminDTO, User, forMember((dest) => dest.id, ignore()));
     };
   }
 }

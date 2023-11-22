@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { AutoMap } from '@automapper/classes';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { UserDTO } from '../../../user/services/dto/user.dto';
+import { UserDTO } from 'src/authentication/user/services/dto/user.dto';
 
 export class CompanyDTO {
   @AutoMap()

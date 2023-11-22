@@ -1,17 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-// import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
+import { RegisterUserDTO } from '../../models/register-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from '../entities/user.entity';
-import { UserRepository } from '../repositories/user.repository';
 import { UserDTO } from './dto/user.dto';
-// import { UserMapper } from './mapper/user.mapper';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { PageOptionsDto } from 'src/common/base/page.options';
 import { PageDto } from 'src/common/base/pagination.entity';
 import { PageMetaDto } from 'src/common/base/page.meta';
+import { Role } from 'src/common/enum/role.enum';
+import { RegisterAdminDTO } from 'src/authentication/models/register-admin.dto';
+import { UserRepository } from '../repositories/user.repository';
 import { CompanyRepository } from 'src/master/company/repositories/company.repository';
+import { User } from '../entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -42,8 +42,8 @@ export class UserService {
     return new PageDto(userDTOs, pageMetaDto);
   }
 
-  async create(createUserDto: CreateUserDto): Promise<UserDTO | undefined> {
-    const entity = this.userMapper.map(createUserDto, CreateUserDto, User);
+  async createUser(createUserDto: RegisterUserDTO, token: string): Promise<UserDTO | undefined> {
+   const entity = this.userMapper.map(createUserDto, RegisterUserDTO, User);
     const company = await this.companyRepository.findOneBy({
       id: createUserDto.companyId,
     });
@@ -54,9 +54,32 @@ export class UserService {
       );
     }
     entity.company = company;
+    entity.password = createUserDto.password;
+    if(token != null){
+      entity.verifyToken = token;
+    }
+    entity.role = Role.USER;
     const result = await this.userRepository.save(entity);
     return this.userMapper.mapAsync(result, User, UserDTO);
   }
+
+  async createAdmin(createUserDto: RegisterAdminDTO, adminRole: Role): Promise<UserDTO | undefined> {
+    const entity = this.userMapper.map(createUserDto, RegisterAdminDTO, User);
+     const company = await this.companyRepository.findOneBy({
+       id: createUserDto.companyId,
+     });
+     if (!company) {
+       throw new HttpException(
+         'Error, region Id not found!',
+         HttpStatus.NOT_FOUND,
+       );
+     }
+     entity.company = company;
+     entity.password = createUserDto.password;
+     entity.role = adminRole;
+     const result = await this.userRepository.save(entity);
+     return this.userMapper.mapAsync(result, User, UserDTO);
+   }
 
   async findAll(): Promise<UserDTO[]> {
     try {
@@ -80,6 +103,11 @@ export class UserService {
     } catch (ex) {
       throw new Error(`findAll error: ${ex.message}.`);
     }
+  }
+
+  async getByEmail(email: string) {
+    const user = await this.userRepository.findOneBy({ email });
+    return user;
   }
 
   async update(

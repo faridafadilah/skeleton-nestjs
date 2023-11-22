@@ -6,9 +6,9 @@ import { CompanyRepository } from 'src/master/company/repositories/company.repos
 import { CompanyDTO } from './dto/company.dto';
 import { Company } from 'src/master/company/entities/company.entity';
 import { CompanyCreateDTO } from './dto/company.dto.create';
-import { User } from 'src/master/user/entities/user.entity';
-import { UserDTO } from '../../user/services/dto/user.dto';
 import { UpdateCompanyDto } from './dto/company.dto.update';
+import { User } from 'src/authentication/user/entities/user.entity';
+import { UserDTO } from 'src/authentication/user/services/dto/user.dto';
 
 @Injectable()
 export class CompanyService {

@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './master/user/user.module';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/database-exception.filter';
 import { dataSourceOptions } from './config/database.config';
@@ -10,6 +9,8 @@ import { RegionModule } from './master/region/region.module';
 import { CountryModule } from './master/country/country.module';
 import { CompanyModule } from './master/company/company.module';
 import { ConfigModule } from '@nestjs/config';
+import { UserModule } from './authentication/user/user.module';
+import { AuthModule } from './authentication/auth.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ConfigModule } from '@nestjs/config';
     RegionModule,
     CountryModule,
     CompanyModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [
