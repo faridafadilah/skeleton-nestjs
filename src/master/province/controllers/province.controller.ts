@@ -26,7 +26,7 @@ export class ProvinceController {
     return await this.provinceService.findAll();
   }
 
-  @Get('/:id')
+  @Get(':id')
   @ApiResponse({
     status: 200,
     description: 'The found record',
@@ -44,8 +44,7 @@ export class ProvinceController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async post(@Body() countryDTO: ProvinceDTO): Promise<ProvinceDTO> {
-    const created = await this.provinceService.save(countryDTO);
-    return created;
+    return await this.provinceService.create(countryDTO);
   }
 
   @Patch(':id')

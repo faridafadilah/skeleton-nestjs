@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class ProvinceDTO {
   @AutoMap()
@@ -7,5 +7,6 @@ export class ProvinceDTO {
 
   @AutoMap()
   @IsString()
+  @IsNotEmpty()
   name: string;
 }

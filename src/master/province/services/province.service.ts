@@ -1,63 +1,59 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ProvinceRepository } from '../repositories/province.repository';
 import { InjectMapper } from '@automapper/nestjs';
-import { Mapper } from '@automapper/core';
 import { ProvinceDTO } from './dtos/province.dto';
 import { Province } from '../entities/province.entity';
+import { Mapper } from '@automapper/core';
 
 @Injectable()
 export class ProvinceService {
   constructor(
-    readonly provinceRepository: ProvinceRepository,
+    private readonly provinceRepository: ProvinceRepository,
     @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
   async findAll(): Promise<ProvinceDTO[]> {
-    try {
-      const result = await this.provinceRepository.find();
+    const provinces = await this.provinceRepository.find();
 
-      return this.mapper.mapArrayAsync(result, Province, ProvinceDTO);
-    } catch (ex) {
-      throw new Error(ex.mesage);
-    }
+    return this.mapper.mapArrayAsync(provinces, Province, ProvinceDTO);
   }
 
-  async findById(id: string): Promise<ProvinceDTO | undefined> {
-    const result = await this.provinceRepository.findOneBy({ id });
+  async findById(id: string): Promise<ProvinceDTO> {
+    const province = await this.findProvinceByIdOrFail(id);
 
-    return this.mapper.mapAsync(result, Province, ProvinceDTO);
+    return this.mapper.mapAsync(province, Province, ProvinceDTO);
   }
 
-  async save(proviceDTO: ProvinceDTO): Promise<ProvinceDTO> {
-    const entity = this.mapper.map(proviceDTO, ProvinceDTO, Province);
-    const result = await this.provinceRepository.save(entity);
-    return this.mapper.mapAsync(result, Province, ProvinceDTO);
+  async create(provinceDTO: ProvinceDTO): Promise<ProvinceDTO> {
+    const entity = this.mapper.map(provinceDTO, ProvinceDTO, Province);
+    const savedEntity = await this.provinceRepository.save(entity);
+
+    return this.mapper.mapAsync(savedEntity, Province, ProvinceDTO);
   }
 
   async update(
     id: string,
     updateProvinceDTO: ProvinceDTO,
-  ): Promise<ProvinceDTO | undefined> {
-    if (!id) throw new Error('update error: id is empty');
+  ): Promise<ProvinceDTO> {
+    await this.findProvinceByIdOrFail(id);
+    await this.provinceRepository.update(id, updateProvinceDTO);
+    const updatedProvince = await this.provinceRepository.findOneBy({ id });
 
-    try {
-      await this.provinceRepository.update(id, updateProvinceDTO);
-      const updateProvince = await this.provinceRepository.findOneBy({ id });
-      return this.mapper.mapAsync(updateProvince, Province, ProvinceDTO);
-    } catch (ex) {
-      throw new Error(`findAll error: ${ex.message}.`);
-    }
+    return this.mapper.mapAsync(updatedProvince, Province, ProvinceDTO);
   }
 
-  async deleteById(id: string): Promise<void | undefined> {
+  async deleteById(id: string): Promise<void> {
+    await this.findProvinceByIdOrFail(id);
     await this.provinceRepository.delete(id);
-    const entityFind = await this.findById(id);
-    if (entityFind) {
-      throw new HttpException(
-        'Error, entity not deleted!',
-        HttpStatus.NOT_FOUND,
-      );
+  }
+
+  private async findProvinceByIdOrFail(id: string): Promise<Province> {
+    const province = await this.provinceRepository.findOneBy({ id });
+
+    if (!province) {
+      throw new NotFoundException(`Province with ID '${id}' not found`);
     }
-    return;
+
+    return province;
   }
 }
