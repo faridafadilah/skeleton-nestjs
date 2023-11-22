@@ -3,12 +3,12 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { CompanyRepository } from 'src/master/company/repositories/company.repository';
-import { CompanyDTO } from './dto/company.dto';
+import { CompanyDTO } from './dtos/company.dto';
 import { Company } from 'src/master/company/entities/company.entity';
-import { CompanyCreateDTO } from './dto/company.dto.create';
-import { UpdateCompanyDto } from './dto/company.dto.update';
-import { User } from 'src/authentication/user/entities/user.entity';
-import { UserDTO } from 'src/authentication/user/services/dto/user.dto';
+import { CompanyCreateDTO } from './dtos/company.dto.create';
+import { UpdateCompanyDto } from './dtos/company.dto.update';
+import { User } from 'src/user/entities/user.entity';
+import { UserDTO } from 'src/user/services/dtos/user.dto';
 
 @Injectable()
 export class CompanyService {

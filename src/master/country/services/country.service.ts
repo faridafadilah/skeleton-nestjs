@@ -1,11 +1,11 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { CountryDTO } from './dto/country-create.dto.';
+import { CountryDTO } from './dtos/country-create.dto.';
 import { CountryRepository } from 'src/master/country/repositories/country.repository';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Country } from 'src/master/country/entities/county.entity';
 import { RegionRepository } from 'src/master/region/repositories/region.repository';
-import { CountryDTORead } from './dto/country.dto';
+import { CountryDTORead } from './dtos/country.dto';
 
 @Injectable()
 export class CountryService {

@@ -3,7 +3,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { RegionRepository } from 'src/master/region/repositories/region.repository';
 import { Region } from 'src/master/region/entities/region.entity';
-import { RegionDTO } from './dto/region.dto';
+import { RegionDTO } from './dtos/region.dto';
 
 @Injectable()
 export class RegionService {

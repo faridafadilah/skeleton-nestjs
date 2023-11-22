@@ -1,21 +1,25 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
-import { JwtService } from "@nestjs/jwt"
-import { expireIn, jwtSecret } from "../decorators/constants"
-import { randomBytes } from "crypto"
-import * as bcrypt from 'bcrypt'
-import { LoginUserDTO } from "../models/login.user.dto"
-import { Role } from "src/common/enum/role.enum"
-import { RegisterUserDTO } from "../models/register-user.dto"
-import { LoginAdminDTO } from "../models/login.admin"
-import { RegisterAdminDTO } from "../models/register-admin.dto"
-import { UserService } from "../user/services/user.service"
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { expireIn, jwtSecret } from '../decorators/constants';
+import { randomBytes } from 'crypto';
+import * as bcrypt from 'bcrypt';
+import { LoginUserDTO } from './dtos/login.user.dto';
+import { Role } from 'src/common/enum/role.enum';
+import { RegisterUserDTO } from './dtos/register-user.dto';
+import { LoginAdminDTO } from './dtos/login.admin';
+import { RegisterAdminDTO } from './dtos/register-admin.dto';
+import { UserService } from '../../user/services/user.service';
 
 @Injectable()
 export class AuthService {
-
   constructor(
-      private userService: UserService,
-      private jwtService: JwtService
+    private userService: UserService,
+    private jwtService: JwtService,
   ) {}
 
   async loginUser(LoginUserDTO: LoginUserDTO): Promise<any> {
@@ -23,24 +27,27 @@ export class AuthService {
     try {
       const foundUser = await this.userService.getByEmail(email);
       console.log(foundUser);
-      
+
       if (!foundUser) {
         throw new NotFoundException('User Not Found!');
       }
 
-      const validatePassword = await this.comparePassword({ password, hash: foundUser.password })
+      const validatePassword = await this.comparePassword({
+        password,
+        hash: foundUser.password,
+      });
       if (!validatePassword) {
-          throw new NotFoundException('Wrong Email / Password!')
+        throw new NotFoundException('Wrong Email / Password!');
       }
 
       const tokenPayLoad = {
         id: foundUser.id.toString(),
         email: foundUser.email,
         name: foundUser.name,
-        role: foundUser.role as Role
+        role: foundUser.role as Role,
       };
       const token = await this.signToken(tokenPayLoad);
-      if(!token) {
+      if (!token) {
         throw new ForbiddenException();
       }
       console.log(token);
@@ -50,7 +57,7 @@ export class AuthService {
         id: foundUser.id,
         email: foundUser.email,
         name: foundUser.name,
-        role: foundUser.role as Role
+        role: foundUser.role as Role,
       };
     } catch (error) {
       console.log(error);
@@ -63,14 +70,14 @@ export class AuthService {
     if (foundUser) {
       throw new BadRequestException('Email Already exists!');
     }
-    
+
     const hashedpassword = await bcrypt.hash(registerDto.password, 10);
     const verifyToken = this.generateToken();
     registerDto.password = hashedpassword;
     const newUser = await this.userService.createUser(registerDto, verifyToken);
     return {
       newUser,
-    }
+    };
   }
 
   async loginAdmin(loginAdminDto: LoginAdminDTO) {
@@ -81,16 +88,19 @@ export class AuthService {
         throw new NotFoundException('User Not Found!');
       }
 
-      const validatePassword = await this.comparePassword({ password, hash: foundUser.password })
+      const validatePassword = await this.comparePassword({
+        password,
+        hash: foundUser.password,
+      });
       if (!validatePassword) {
-          throw new NotFoundException('Wrong Email / Password!')
+        throw new NotFoundException('Wrong Email / Password!');
       }
 
       const tokenPayLoad = {
         id: foundUser.id.toString(),
         email: foundUser.email,
         name: foundUser.name,
-        role: foundUser.role as Role
+        role: foundUser.role as Role,
       };
       const token = await this.signToken(tokenPayLoad);
       if (!token) {
@@ -102,7 +112,7 @@ export class AuthService {
         id: foundUser.id.toString(),
         email: foundUser.email,
         name: foundUser.name,
-        role: foundUser.role as Role
+        role: foundUser.role as Role,
       };
     } catch (error) {
       console.log(error);
@@ -118,8 +128,8 @@ export class AuthService {
       const hashedpassword = await bcrypt.hash(regisDto.password, 10);
       const adminRole: Role = Role[regisDto.role as keyof typeof Role];
       regisDto.password = hashedpassword;
-      const newAdmin = await this.userService.createAdmin(regisDto, adminRole)
-      return newAdmin
+      const newAdmin = await this.userService.createAdmin(regisDto, adminRole);
+      return newAdmin;
     } catch (error) {
       console.log(error);
     }
@@ -129,12 +139,12 @@ export class AuthService {
     return await bcrypt.compare(args.password, args.hash);
   }
 
-  async signToken(args: { id: string, email: string, name: string}) {
+  async signToken(args: { id: string; email: string; name: string }) {
     const { id, email, name } = args;
-  
+
     const payload = { id, email, name };
-    const options = { expiresIn: expireIn }; 
-  
+    const options = { expiresIn: expireIn };
+
     try {
       const token = await this.jwtService.signAsync(payload, options);
       return token;

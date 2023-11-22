@@ -7,10 +7,10 @@ import {
   Patch,
   Post as PostMethod,
 } from '@nestjs/common';
-import { CountryDTO } from '../services/dto/country-create.dto.';
+import { CountryDTO } from '../services/dtos/country-create.dto.';
 import { CountryService } from '../services/country.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CountryDTORead } from 'src/master/country/services/dto/country.dto';
+import { CountryDTORead } from 'src/master/country/services/dtos/country.dto';
 
 @Controller('api/countries')
 @ApiTags('country')
