@@ -2,7 +2,9 @@ import { Entity, Column, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { Exclude } from 'class-transformer';
 import { AutoMap } from '@automapper/classes';
-import { Company } from '../../company/entities/company.entity';
+import { Role } from 'src/common/enum/role.enum';
+import { Company } from 'src/master/company/entities/company.entity';
+
 @Entity()
 export class User extends BaseEntity {
   @AutoMap()
@@ -10,16 +12,8 @@ export class User extends BaseEntity {
   name: string;
 
   @AutoMap()
-  @Column({ type: 'varchar', length: 15 })
-  username: string;
-
-  @AutoMap()
   @Column({ type: 'varchar', length: 40 })
   email: string;
-
-  @AutoMap()
-  @Column({ type: 'int' })
-  age: number;
 
   @AutoMap()
   @Exclude()
@@ -33,4 +27,13 @@ export class User extends BaseEntity {
   @AutoMap(() => Company)
   @ManyToOne(() => Company)
   company: Company;
+  
+  @Column({ nullable: true })
+  verifyToken: string | null;
+
+  @Column({ nullable: true })
+  resetToken: string | null;
+
+  @Column({ type: 'enum', enum: Role, default: Role.USER })
+  role: Role;
 }

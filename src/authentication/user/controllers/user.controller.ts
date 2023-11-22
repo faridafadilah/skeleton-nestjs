@@ -11,30 +11,18 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
-import { UserService } from '../services/user.service';
-import { CreateUserDto } from '../services/dto/create-user.dto';
-import { UpdateUserDto } from '../services/dto/update-user.dto';
 import { HttpExceptionFilter } from '../../../common/database-exception.filter';
-import { UserDTO } from 'src/master/user/services/dto/user.dto';
 import { PageOptionsDto } from 'src/common/base/page.options';
 import { PageDto } from 'src/common/base/pagination.entity';
+import { UserService } from '../services/user.service';
+import { UserDTO } from '../services/dto/user.dto';
+import { UpdateUserDto } from '../services/dto/update-user.dto';
 
 @Controller('user')
 @ApiTags('users')
 @UseFilters(new HttpExceptionFilter())
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @Post()
-  @ApiResponse({
-    status: 200,
-    description: 'Create User',
-    type: UserDTO,
-  })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
-  create(@Body() createUserDto: CreateUserDto): Promise<UserDTO> {
-    return this.userService.create(createUserDto);
-  }
 
   @Get('all/')
   async getUsers(

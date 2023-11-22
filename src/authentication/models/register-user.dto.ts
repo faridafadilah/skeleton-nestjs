@@ -13,7 +13,7 @@ import {
 const passwordRegEx =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 
-export class CreateUserDto {
+export class RegisterUserDTO {
   @AutoMap()
   @IsString()
   @MinLength(2, { message: 'Name must have at least 2 characters' })
@@ -22,20 +22,8 @@ export class CreateUserDto {
 
   @AutoMap()
   @IsNotEmpty()
-  @MinLength(3, { message: 'Username must have at least 3 characters.' })
-  @IsAlphanumeric('en-US', {
-    message: 'Username does not allow characters other than alphanumeric.',
-  })
-  username: string;
-
-  @AutoMap()
-  @IsNotEmpty()
   @IsEmail({}, { message: 'Please provide a valid Email' })
   email: string;
-
-  @AutoMap()
-  @IsInt()
-  age: number;
 
   @AutoMap()
   @IsString()

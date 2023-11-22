@@ -1,7 +1,13 @@
 /* eslint-disable prettier/prettier */
 import { AutoMap } from '@automapper/classes';
-import { IsEmail, IsEnum, IsInt, IsString } from 'class-validator';
-import { CompanyCreateDTO } from '../../../company/services/dto/company.dto.create';
+import {
+  IsEmail,
+  IsEnum,
+  IsInt,
+  IsString,
+} from 'class-validator';
+import { Role } from 'src/common/enum/role.enum';
+import { CompanyCreateDTO } from 'src/master/company/services/dto/company.dto.create';
 
 export class UserDTO {
   @AutoMap()
@@ -12,16 +18,8 @@ export class UserDTO {
   name: string;
 
   @AutoMap()
-  @IsString()
-  username: string;
-
-  @AutoMap()
   @IsEmail({}, { message: 'Please provide a valid Email' })
   email: string;
-
-  @AutoMap()
-  @IsInt()
-  age: number;
 
   @AutoMap()
   @IsString()
@@ -30,4 +28,10 @@ export class UserDTO {
 
   @AutoMap(() => CompanyCreateDTO)
   company: CompanyCreateDTO;
+  
+  @AutoMap()
+  verifyToken: string | null;
+
+  @AutoMap()
+  role: Role;
 }

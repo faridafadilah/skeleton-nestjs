@@ -7,19 +7,27 @@ import {
   Param,
   Patch,
   Post as PostMethod,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/authentication/decorators/roles.decorator';
+import { JwtAuthGuard } from 'src/authentication/guards/auth.guard';
+import { RolesGuard } from 'src/authentication/guards/roles.guard';
+import { Role } from 'src/common/enum/role.enum';
 import { CompanyService } from 'src/master/company/services/company.service';
 import { CompanyDTO } from 'src/master/company/services/dto/company.dto';
 import { CompanyCreateDTO } from 'src/master/company/services/dto/company.dto.create';
 import { UpdateCompanyDto } from 'src/master/company/services/dto/company.dto.update';
 
 @Controller('api/company')
+@ApiBearerAuth()
 @ApiTags('company')
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
   @Get()
+  @Roles(Role.USER)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({
     status: 200,
     description: 'List all users',
