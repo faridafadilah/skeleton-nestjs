@@ -6,10 +6,12 @@ import {
   Patch,
   Post,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ProvinceService } from '../services/province.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProvinceDTO } from '../services/dtos/province.dto';
+import { PaginationQueryDto } from 'src/common/base/pagination.dto';
 
 @Controller('provinces')
 @ApiTags('provinces')
@@ -22,8 +24,11 @@ export class ProvinceController {
     description: 'List all users',
     type: ProvinceDTO,
   })
-  async findAll(): Promise<ProvinceDTO[]> {
-    return await this.provinceService.findAll();
+  async findAll(@Query() paginationQuery: PaginationQueryDto): Promise<any> {
+    return await this.provinceService.findAll(
+      paginationQuery.page,
+      paginationQuery.limit,
+    );
   }
 
   @Get(':id')

@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
@@ -12,11 +11,10 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { HttpExceptionFilter } from '../../../common/database-exception.filter';
-import { PageOptionsDto } from 'src/common/base/page.options';
-import { PageDto } from 'src/common/base/pagination.entity';
 import { UserService } from '../services/user.service';
 import { UserDTO } from '../services/dto/user.dto';
 import { UpdateUserDto } from '../services/dto/update-user.dto';
+import { PaginationQueryDto } from 'src/common/base/pagination.dto';
 
 @Controller('user')
 @ApiTags('users')
@@ -24,21 +22,17 @@ import { UpdateUserDto } from '../services/dto/update-user.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('all/')
-  async getUsers(
-    @Query() pageOptionsDto: PageOptionsDto,
-  ): Promise<PageDto<UserDTO>> {
-    return this.userService.getUsersPaginate(pageOptionsDto);
-  }
-
   @Get()
   @ApiResponse({
     status: 200,
     description: 'List all users',
     type: UserDTO,
   })
-  async findAll(): Promise<UserDTO[]> {
-    return await this.userService.findAll();
+  async findAll(@Query() paginationQuery: PaginationQueryDto): Promise<any> {
+    return await this.userService.findAll(
+      paginationQuery.page,
+      paginationQuery.limit,
+    );
   }
 
   @Get(':id')
