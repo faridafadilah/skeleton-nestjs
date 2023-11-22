@@ -7,23 +7,23 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
-import { LoginUserDTO } from '../models/login.user.dto';
-import { RegisterUserDTO } from '../models/register-user.dto';
-import { LoginAdminDTO } from '../models/login.admin';
-import { RegisterAdminDTO } from '../models/register-admin.dto';
+import { LoginUserDTO } from '../services/dtos/login.user.dto';
+import { RegisterUserDTO } from '../services/dtos/register-user.dto';
+import { LoginAdminDTO } from '../services/dtos/login.admin';
+import { RegisterAdminDTO } from '../services/dtos/register-admin.dto';
 
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
   async loginUserV1(
-    @Body() LoginUserDTO: LoginUserDTO,
+    @Body() loginUserDTO: LoginUserDTO,
     @Req() req,
     @Res() res,
   ) {
     try {
-      const result = await this.authService.loginUser(LoginUserDTO);
+      const result = await this.authService.loginUser(loginUserDTO);
       return res.status(200).json({
         statusCode: '200',
         message: 'Successfully Login!',

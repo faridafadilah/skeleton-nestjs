@@ -5,7 +5,7 @@ import { Company } from 'src/master/company/entities/company.entity';
 import { CompanyController } from 'src/master/company/controllers/company.controller';
 import { CompanyService } from 'src/master/company/services/company.service';
 import { CompanyRepository } from 'src/master/company/repositories/company.repository';
-import { CompanyMapper } from 'src/master/company/services/mapper/company.mapper';
+import { CompanyMapper } from 'src/master/company/services/mappers/company.mapper';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Company])],

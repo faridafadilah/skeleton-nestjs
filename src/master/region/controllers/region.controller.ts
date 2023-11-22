@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { RegionDTO } from '../services/dto/region.dto';
+import { RegionDTO } from '../services/dtos/region.dto';
 import { RegionService } from '../services/region.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 

@@ -2,26 +2,20 @@
 import { AutoMap } from '@automapper/classes';
 import {
   PrimaryGeneratedColumn,
-  Column,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 export abstract class BaseEntity {
   @AutoMap()
-  @PrimaryGeneratedColumn()
-  id?: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @AutoMap()
-  @Column({ nullable: true })
-  createdBy?: string;
-
   @CreateDateColumn({ nullable: true })
   createdDate?: Date;
 
-  @Column({ nullable: true })
-  lastModifiedBy?: string;
-  
+  @AutoMap()
   @UpdateDateColumn({ nullable: true })
-  lastModifiedDate?: Date;
+  updatedDate?: Date;
 }

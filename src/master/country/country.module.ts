@@ -4,7 +4,7 @@ import { CountryController } from './controllers/country.controller';
 import { CountryRepository } from './repositories/country.repository';
 import { CountryService } from './services/country.service';
 import { Country } from 'src/master/country/entities/county.entity';
-import { CountryMapper } from 'src/master/country/services/mapper/country.mapper';
+import { CountryMapper } from 'src/master/country/services/mappers/country.mapper';
 import { RegionRepository } from 'src/master/region/repositories/region.repository';
 
 @Module({

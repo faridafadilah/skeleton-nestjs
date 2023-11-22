@@ -2,7 +2,7 @@
 import { Entity, Column, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { AutoMap } from '@automapper/classes';
-import { User } from 'src/authentication/user/entities/user.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @Entity('company')
 export class Company extends BaseEntity {
