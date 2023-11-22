@@ -18,12 +18,12 @@ export class AuthController {
 
   @Post('login')
   async loginUserV1(
-    @Body() LoginUserDTO: LoginUserDTO,
+    @Body() loginUserDTO: LoginUserDTO,
     @Req() req,
     @Res() res,
   ) {
     try {
-      const result = await this.authService.loginUser(LoginUserDTO);
+      const result = await this.authService.loginUser(loginUserDTO);
       return res.status(200).json({
         statusCode: '200',
         message: 'Successfully Login!',

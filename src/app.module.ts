@@ -5,9 +5,6 @@ import { HttpExceptionFilter } from './common/database-exception.filter';
 import { dataSourceOptions } from './config/database.config';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
-import { RegionModule } from './master/region/region.module';
-import { CountryModule } from './master/country/country.module';
-import { CompanyModule } from './master/company/company.module';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './authentication/user/user.module';
 import { AuthModule } from './authentication/auth.module';
@@ -22,9 +19,6 @@ import { AuthModule } from './authentication/auth.module';
       strategyInitializer: classes(),
     }),
     UserModule,
-    RegionModule,
-    CountryModule,
-    CompanyModule,
     AuthModule,
   ],
   controllers: [],

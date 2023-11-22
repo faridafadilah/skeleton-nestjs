@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
@@ -48,7 +47,7 @@ export class UserController {
     type: UserDTO,
   })
   async findOne(@Param('id') id: string): Promise<UserDTO> {
-    const user = await this.userService.findOne(+id);
+    const user = await this.userService.findOne(id);
     if (!user) {
       throw new NotFoundException(`Article with id ${id} Not Found!`);
     }
@@ -66,11 +65,11 @@ export class UserController {
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserDTO> {
-    return this.userService.update(+id, updateUserDto);
+    return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+    return this.userService.remove(id);
   }
 }

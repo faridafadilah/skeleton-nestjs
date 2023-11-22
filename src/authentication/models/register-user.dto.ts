@@ -1,9 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import {
-  IsAlphanumeric,
   IsEmail,
   IsEnum,
-  IsInt,
   IsNotEmpty,
   IsString,
   Matches,
@@ -33,14 +31,11 @@ export class RegisterUserDTO {
   @AutoMap()
   @IsNotEmpty()
   @Matches(passwordRegEx, {
-    message: `Password must contain a minimum of 8 and a maximum of 20 characters, 
-    at least one uppercase letter, 
-    one lowercase letter, 
-    one number, and 
+    message: `Password must contain a minimum of 8 and a maximum of 20 characters,
+    at least one uppercase letter,
+    one lowercase letter,
+    one number, and
     one special character`,
   })
   password: string;
-
-  @AutoMap()
-  companyId: number;
 }

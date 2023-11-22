@@ -1,9 +1,8 @@
-import { Entity, Column, ManyToOne } from 'typeorm';
+import { Entity, Column } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { Exclude } from 'class-transformer';
 import { AutoMap } from '@automapper/classes';
 import { Role } from 'src/common/enum/role.enum';
-import { Company } from 'src/master/company/entities/company.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -24,10 +23,6 @@ export class User extends BaseEntity {
   @Column({ type: 'enum', enum: ['m', 'f', 'u'] })
   gender: string;
 
-  @AutoMap(() => Company)
-  @ManyToOne(() => Company)
-  company: Company;
-  
   @Column({ nullable: true })
   verifyToken: string | null;
 

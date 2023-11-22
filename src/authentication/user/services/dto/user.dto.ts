@@ -1,17 +1,10 @@
-/* eslint-disable prettier/prettier */
 import { AutoMap } from '@automapper/classes';
-import {
-  IsEmail,
-  IsEnum,
-  IsInt,
-  IsString,
-} from 'class-validator';
+import { IsEmail, IsEnum, IsString } from 'class-validator';
 import { Role } from 'src/common/enum/role.enum';
-import { CompanyCreateDTO } from 'src/master/company/services/dto/company.dto.create';
 
 export class UserDTO {
   @AutoMap()
-  id: number;
+  id: string;
 
   @AutoMap()
   @IsString()
@@ -26,9 +19,6 @@ export class UserDTO {
   @IsEnum(['f', 'm', 'u'])
   gender: string;
 
-  @AutoMap(() => CompanyCreateDTO)
-  company: CompanyCreateDTO;
-  
   @AutoMap()
   verifyToken: string | null;
 
