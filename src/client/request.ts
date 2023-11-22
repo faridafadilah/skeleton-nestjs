@@ -17,15 +17,24 @@ export class ResponseInterceptor implements NestInterceptor {
         const statusCode = response.statusCode || HttpStatus.OK;
         let message = '';
 
-        switch (statusCode) {
-          case HttpStatus.CREATED:
+        const httpMethod = context.switchToHttp().getRequest().method;
+
+        switch (httpMethod) {
+          case 'GET':
+            message = 'Resource get successfully';
+            break;
+          case 'POST':
             message = 'Resource created successfully';
             break;
-          case HttpStatus.BAD_REQUEST:
-            message = 'Bad request';
+          case 'PATCH':
+          case 'PUT':
+            message = 'Resource updated successfully';
+            break;
+          case 'DELETE':
+            message = 'Resource deleted successfully';
             break;
           default:
-            message = 'Operation successful';
+            message = 'Operation successfully';
             break;
         }
 
