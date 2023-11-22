@@ -17,7 +17,11 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  async loginUserV1(@Body() LoginUserDTO: LoginUserDTO, @Req() req, @Res() res) {
+  async loginUserV1(
+    @Body() LoginUserDTO: LoginUserDTO,
+    @Req() req,
+    @Res() res,
+  ) {
     try {
       const result = await this.authService.loginUser(LoginUserDTO);
       return res.status(200).json({
@@ -35,7 +39,11 @@ export class AuthController {
   }
 
   @Post('register')
-  async registerUserV1(@Body() registerDto: RegisterUserDTO, @Req() req, @Res() res) {
+  async registerUserV1(
+    @Body() registerDto: RegisterUserDTO,
+    @Req() req,
+    @Res() res,
+  ) {
     try {
       const result = await this.authService.registerUser(registerDto);
       return res.status(200).json({
@@ -53,7 +61,11 @@ export class AuthController {
   }
 
   @Post('login-admin')
-  async loginAdminV1(@Body() loginAdminDto: LoginAdminDTO, @Req() req, @Res() res) {
+  async loginAdminV1(
+    @Body() loginAdminDto: LoginAdminDTO,
+    @Req() req,
+    @Res() res,
+  ) {
     try {
       const result = await this.authService.loginAdmin(loginAdminDto);
       return res.status(200).json({
@@ -73,10 +85,10 @@ export class AuthController {
   @Post('register-admin')
   @UseInterceptors()
   async registerAdminV1(
-    @Body() registerAdminDto: RegisterAdminDTO, 
-    @Req() req, 
-    @Res() res
-    ) {
+    @Body() registerAdminDto: RegisterAdminDTO,
+    @Req() req,
+    @Res() res,
+  ) {
     try {
       const result = await this.authService.registerAdmin(registerAdminDto);
       return res.status(200).json({
@@ -85,7 +97,7 @@ export class AuthController {
         data: result,
       });
     } catch (err) {
-      console.log(err)
+      console.log(err);
       return res.status(500).json({
         statusCode: '500',
         message: 'Internal Server Error!',

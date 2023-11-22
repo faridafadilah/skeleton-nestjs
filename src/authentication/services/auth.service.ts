@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { JwtService } from "@nestjs/jwt"
-import { jwtSecret } from "../decorators/constants"
+import { expireIn, jwtSecret } from "../decorators/constants"
 import { randomBytes } from "crypto"
 import * as bcrypt from 'bcrypt'
 import { LoginUserDTO } from "../models/login.user.dto"
@@ -125,69 +125,6 @@ export class AuthService {
     }
   }
 
-  // async verifyEmail(token: string) {
-  //   const user = await this.prisma.user.findFirst({
-  //     where: { verifyToken: token },
-  //   });
-
-  //   if (!user) {
-  //     throw new BadRequestException('Invalid verification token!');
-  //   }
-
-  //   const verify = await this.prisma.user.update({
-  //     where: { id: user.id },
-  //     data: {
-  //       isVerified: true,
-  //       verifyToken: null,
-  //       confirmedAt: new Date(),
-  //     },
-  //   });
-
-  //   return verify
-  // }
-
-  // async forgotPassword(email: string) {
-  //   const user = await this.prisma.user.findFirst({ where: { email } });
-
-  //   if (!user) {
-  //     throw new BadRequestException('Email not Found!');
-  //   }
-
-  //   const resetToken = this.generateToken();
-
-  //   const forgotPassword = await this.prisma.user.update({
-  //     where: { id: user.id },
-  //     data: {
-  //       resetToken,
-  //     },
-  //   });
-
-  //   await this.sendResetPasswordEmail(email, resetToken);
-
-  //   return forgotPassword
-  // }
-
-  // async resetPassword(token: string, password: string) {
-  //   const user = await this.prisma.user.findFirst({
-  //     where: { resetToken: token },
-  //   });
-
-  //   if (!user) {
-  //     throw new BadRequestException('Invalid reset token.');
-  //   }
-
-  //   const hashedpassword = await bcrypt.hash(password, 10);
-  //   const newPassword = await this.prisma.user.update({
-  //     where: { id: user.id },
-  //     data: {
-  //       hashedpassword: hashedpassword,
-  //       resetToken: null,
-  //     },
-  //   });
-
-  //   return newPassword
-  // }
-
   async comparePassword(args: { password: string; hash: string }) {
     return await bcrypt.compare(args.password, args.hash);
   }
@@ -196,7 +133,7 @@ export class AuthService {
     const { id, email, name } = args;
   
     const payload = { id, email, name };
-    const options = { expiresIn: '1h' }; 
+    const options = { expiresIn: expireIn }; 
   
     try {
       const token = await this.jwtService.signAsync(payload, options);
