@@ -9,6 +9,7 @@ import { UserModule } from './authentication/user/user.module';
 import { AuthModule } from './authentication/auth.module';
 import { ProvinceModule } from './master/province/province.module';
 import { ResponseInterceptor } from './client/request';
+import { YayasanModule } from './master/institution/yayasan/yayasan.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ResponseInterceptor } from './client/request';
     UserModule,
     AuthModule,
     ProvinceModule,
+    YayasanModule,
   ],
   controllers: [],
   providers: [

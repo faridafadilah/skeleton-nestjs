@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { RegisterUserDTO } from '../../models/register-user.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { RegisterUserDTO } from '../../models/register.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDTO } from './dto/user.dto';
 import { Mapper } from '@automapper/core';
@@ -8,7 +8,6 @@ import { PageOptionsDto } from 'src/common/base/page.options';
 import { PageDto } from 'src/common/base/pagination.entity';
 import { PageMetaDto } from 'src/common/base/page.meta';
 import { Role } from 'src/common/enum/role.enum';
-import { RegisterAdminDTO } from 'src/authentication/models/register-admin.dto';
 import { UserRepository } from '../repositories/user.repository';
 import { User } from '../entities/user.entity';
 
@@ -40,46 +39,36 @@ export class UserService {
     return new PageDto(userDTOs, pageMetaDto);
   }
 
-  async createUser(
+  async create(
     createUserDto: RegisterUserDTO,
     token: string,
   ): Promise<UserDTO | undefined> {
     const entity = this.userMapper.map(createUserDto, RegisterUserDTO, User);
-
     entity.password = createUserDto.password;
+    entity.role = createUserDto.role;
     if (token != null) {
-      entity.verifyToken = token;
+      entity.remember_token = token;
     }
-    entity.role = Role.USER;
-    const result = await this.userRepository.save(entity);
-    return this.userMapper.mapAsync(result, User, UserDTO);
-  }
-
-  async createAdmin(
-    createUserDto: RegisterAdminDTO,
-    adminRole: Role,
-  ): Promise<UserDTO | undefined> {
-    const entity = this.userMapper.map(createUserDto, RegisterAdminDTO, User);
-
-    entity.password = createUserDto.password;
-    entity.role = adminRole;
     const result = await this.userRepository.save(entity);
     return this.userMapper.mapAsync(result, User, UserDTO);
   }
 
   async findAll(): Promise<UserDTO[]> {
     try {
-      const result = await this.userRepository.find();
+      const result = await this.userRepository.find({
+        relations: ['company'],
+      });
       return this.userMapper.mapArrayAsync(result, User, UserDTO);
     } catch (ex) {
       throw new Error(`findAll error: ${ex.message}.`);
     }
   }
 
-  async findOne(id: string): Promise<UserDTO | undefined> {
+  async findOne(id: number): Promise<UserDTO | undefined> {
     try {
       const result = await this.userRepository
         .createQueryBuilder('user')
+        .leftJoinAndSelect('user.company', 'company')
         .where('user.id = :id', { id })
         .getOne();
       return this.userMapper.mapAsync(result, User, UserDTO);
@@ -107,7 +96,7 @@ export class UserService {
     }
   }
 
-  remove(id: string): Promise<{ affected?: number }> {
+  remove(id: number): Promise<{ affected?: number }> {
     if (!id) throw new Error(`remove error: id is empty.`);
     try {
       return this.userRepository.delete(id);

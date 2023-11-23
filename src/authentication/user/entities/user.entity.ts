@@ -1,4 +1,4 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { Exclude } from 'class-transformer';
 import { AutoMap } from '@automapper/classes';
@@ -15,20 +15,21 @@ export class User extends BaseEntity {
   email: string;
 
   @AutoMap()
+  @Column({ nullable: true })
+  email_verified_at?: Date;
+
+  @AutoMap()
   @Exclude()
   @Column({ type: 'varchar' })
   password: string;
 
-  @AutoMap()
-  @Column({ type: 'enum', enum: ['m', 'f', 'u'] })
-  gender: string;
-
   @Column({ nullable: true })
-  verifyToken: string | null;
+  remember_token?: string;
 
   @Column({ nullable: true })
   resetToken: string | null;
 
-  @Column({ type: 'enum', enum: Role, default: Role.USER })
+  @AutoMap()
+  @Column({ type: 'enum', enum: Role })
   role: Role;
 }

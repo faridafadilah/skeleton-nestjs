@@ -1,0 +1,4 @@
+export enum TYPE_INSTITUTION {
+  YAYASAN = 'YAYASAN',
+  SEKOLAH = 'SEKOLAH',
+}

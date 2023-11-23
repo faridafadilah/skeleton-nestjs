@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Post,
   Body,
   Patch,
   Param,
@@ -9,7 +10,7 @@ import {
   UseFilters,
   Query,
 } from '@nestjs/common';
-import { ApiTags, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { HttpExceptionFilter } from '../../../common/database-exception.filter';
 import { PageOptionsDto } from 'src/common/base/page.options';
 import { PageDto } from 'src/common/base/pagination.entity';
@@ -47,7 +48,7 @@ export class UserController {
     type: UserDTO,
   })
   async findOne(@Param('id') id: string): Promise<UserDTO> {
-    const user = await this.userService.findOne(id);
+    const user = await this.userService.findOne(+id);
     if (!user) {
       throw new NotFoundException(`Article with id ${id} Not Found!`);
     }
@@ -56,6 +57,7 @@ export class UserController {
   }
 
   @Patch(':id')
+  @ApiBody({ type: UpdateUserDto })
   @ApiResponse({
     status: 200,
     description: 'Update User',
@@ -70,6 +72,6 @@ export class UserController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userService.remove(id);
+    return this.userService.remove(+id);
   }
 }
