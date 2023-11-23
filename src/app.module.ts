@@ -11,6 +11,7 @@ import { ProvinceModule } from './master/region/province/province.module';
 import { ResponseInterceptor } from './client/request';
 import { RegencyModule } from './master/region/regency/regency.module';
 import { FoundationModule } from './master/institution/foundation/foundation.module';
+import { DistrictModule } from './master/region/district/district.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { FoundationModule } from './master/institution/foundation/foundation.mod
     ProvinceModule,
     FoundationModule,
     RegencyModule,
+    DistrictModule,
   ],
   controllers: [],
   providers: [
