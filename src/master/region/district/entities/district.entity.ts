@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -22,7 +23,10 @@ export class District {
   name: string;
 
   @AutoMap(() => Regency)
-  @ManyToOne(() => Regency, (regency) => regency.districts)
+  @ManyToOne(() => Regency, (regency) => regency.districts, {
+    nullable: false,
+  })
+  @JoinColumn({ name: 'regencyId' })
   regency: Regency;
 
   @AutoMap(() => Village)

@@ -6,6 +6,8 @@ import { Province } from '../entities/province.entity';
 import { Mapper } from '@automapper/core';
 import { FindManyOptions } from 'typeorm';
 import { Pagination } from 'nestjs-typeorm-paginate';
+import { Regency } from '../../regency/entities/regency.entity';
+import { RegencyDTO } from '../../regency/services/dtos/regency.dto';
 
 @Injectable()
 export class ProvinceService {
@@ -15,18 +17,32 @@ export class ProvinceService {
   ) {}
 
   async findAll(page = 1, limit = 10): Promise<Pagination<ProvinceDTO>> {
-    const findOptions: FindManyOptions<Province> = {
+    const skip = (page - 1) * limit;
+    const [provinces, total] = await this.provinceRepository.findAndCount({
+      relations: ['regencies'],
+      skip,
       take: limit,
-      skip: (page - 1) * limit,
-    };
-
-    const [provinces, total] =
-      await this.provinceRepository.findAndCount(findOptions);
+    });
 
     const mappedProvinces = this.mapper.mapArray(
       provinces,
       Province,
       ProvinceDTO,
+    );
+
+    console.log(provinces);
+    await Promise.all(
+      mappedProvinces.map(async (companyDTO) => {
+        if (companyDTO.regencies) {
+          companyDTO.regencies = await this.mapper.mapArrayAsync(
+            companyDTO.regencies as unknown as Regency[],
+            Regency,
+            RegencyDTO,
+          );
+        } else {
+          companyDTO.regencies = [];
+        }
+      }),
     );
 
     return {

@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -20,7 +21,10 @@ export class Village {
   name: string;
 
   @AutoMap(() => District)
-  @ManyToOne(() => District, (district) => district.villages)
+  @ManyToOne(() => District, (district) => district.villages, {
+    nullable: false,
+  })
+  @JoinColumn({ name: 'districtId' })
   district: District;
 
   @AutoMap()
