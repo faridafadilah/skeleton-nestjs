@@ -12,6 +12,7 @@ import { ResponseInterceptor } from './client/request';
 import { RegencyModule } from './master/region/regency/regency.module';
 import { FoundationModule } from './master/institution/foundation/foundation.module';
 import { DistrictModule } from './master/region/district/district.module';
+import { VillageModule } from './master/region/village/village.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { DistrictModule } from './master/region/district/district.module';
     FoundationModule,
     RegencyModule,
     DistrictModule,
+    VillageModule,
   ],
   controllers: [],
   providers: [

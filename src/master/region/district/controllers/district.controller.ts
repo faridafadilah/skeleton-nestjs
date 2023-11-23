@@ -69,7 +69,7 @@ export class DistrictController {
     status: 203,
     description: 'The record has been successfully deleted.',
   })
-  async DeleteQueryBuilder(@Param('id') id: string): Promise<void> {
+  async deleteById(@Param('id') id: string): Promise<void> {
     return await this.districtService.deleteById(id);
   }
 }
