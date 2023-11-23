@@ -4,7 +4,7 @@ import { Exclude } from 'class-transformer';
 import { AutoMap } from '@automapper/classes';
 import { Role } from 'src/common/enum/role.enum';
 
-@Entity()
+@Entity('users')
 export class User extends BaseEntity {
   @AutoMap()
   @Column({ type: 'varchar', length: 30 })

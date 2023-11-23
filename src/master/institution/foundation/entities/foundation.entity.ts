@@ -5,7 +5,7 @@ import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { TYPE_INSTITUTION } from 'src/common/enum/type-institution.enum';
 import { BaseEntity } from '../../../../common/base/base.entity';
 
-@Entity('institution')
+@Entity('institutions')
 export class Foundation extends BaseEntity {
   @AutoMap()
   @Column({ type: 'varchar' })
