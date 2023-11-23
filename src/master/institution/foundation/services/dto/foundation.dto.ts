@@ -1,67 +1,79 @@
 /* eslint-disable prettier/prettier */
-import { Entity, Column, BaseEntity } from 'typeorm';
+import { Column } from 'typeorm';
 import { AutoMap } from '@automapper/classes';
 import { IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-@Entity('foundation')
-export class FoundationDTO extends BaseEntity {
+export class FoundationDTO {
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   name: string;
 
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   code: string;
 
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   address: string;
 
+  @ApiProperty()
+  @AutoMap()
+  @Column({ type: 'varchar' })
+  @IsString()
+  phone: string;
+
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   province: string;
 
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
-  city: string;
+  regency: string;
 
-  @AutoMap()
-  @Column({ type: 'varchar' })
-  @IsString()
-  sub_district: string;
-
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   district: string;
 
+  @ApiProperty()
+  @AutoMap()
+  @Column({ type: 'varchar' })
+  @IsString()
+  village: string;
+
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   rt: string;
 
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   rw: string;
 
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   postal_code: string;
 
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   longlat: string;
-
-  @AutoMap()
-  @Column({ type: 'varchar' })
-  @IsString()
-  phone: string;
 }

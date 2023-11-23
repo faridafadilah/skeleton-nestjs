@@ -14,11 +14,11 @@ export abstract class BaseEntity {
 
   @AutoMap()
   @Column({ nullable: true })
-  created_by?: string;
+  createdBy?: string;
 
   @CreateDateColumn({ nullable: true })
-  created_at?: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn({ nullable: true })
-  update_at?: Date;
+  updatedAt?: Date;
 }

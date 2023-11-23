@@ -5,9 +5,8 @@ import { InjectMapper } from '@automapper/nestjs';
 import { FoundationRepository } from '../repositories/foundation.repository';
 import { Foundation } from '../entities/foundation.entity';
 import { TYPE_INSTITUTION } from 'src/common/enum/type-institution.enum';
+import { FoundationReadDTO } from './dto/foundation-read.dto';
 import { FoundationDTO } from './dto/foundation.dto';
-import { FoundationCreateDTO } from './dto/foundation-create.dto';
-import { FoundationUpdateDto } from './dto/foundation-update.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { FindManyOptions } from 'typeorm';
 
@@ -18,8 +17,11 @@ export class FoundationService {
     @InjectMapper() private readonly foundationMapper: Mapper,
   ) {}
 
-  async findAll(page = 1, limit = 10): Promise<Pagination<FoundationDTO>> {
+  async findAll(page = 1, limit = 10): Promise<Pagination<FoundationReadDTO>> {
     const findOptions: FindManyOptions<Foundation> = {
+      where: {
+        type_institution: TYPE_INSTITUTION.FOUNDATION,
+      },
       take: limit,
       skip: (page - 1) * limit,
     };
@@ -30,7 +32,7 @@ export class FoundationService {
     const mappedFoundation = this.foundationMapper.mapArray(
       foundation,
       Foundation,
-      FoundationDTO,
+      FoundationReadDTO,
     );
 
     return {
@@ -45,29 +47,43 @@ export class FoundationService {
     };
   }
 
-  async findById(id: string): Promise<FoundationDTO | undefined> {
-    const result = await this.foundationRepository.findOneBy({ id });
-    return this.foundationMapper.mapAsync(result, Foundation, FoundationDTO);
+  async findById(id: string): Promise<FoundationReadDTO | undefined> {
+    const result = await this.foundationRepository.findOne({
+      where: {
+        id: id,
+        type_institution: TYPE_INSTITUTION.FOUNDATION,
+      },
+    });
+    return this.foundationMapper.mapAsync(
+      result,
+      Foundation,
+      FoundationReadDTO,
+    );
   }
 
   async save(
-    foundationDto: FoundationCreateDTO,
-  ): Promise<FoundationDTO | undefined> {
+    foundationDTO: FoundationDTO,
+    createdBy: string,
+  ): Promise<FoundationReadDTO | undefined> {
     const entity = this.foundationMapper.map(
-      foundationDto,
-      FoundationCreateDTO,
+      foundationDTO,
+      FoundationDTO,
       Foundation,
     );
-    entity.created_at = new Date();
     entity.type_institution = TYPE_INSTITUTION.FOUNDATION;
+    entity.createdBy = createdBy;
     const result = await this.foundationRepository.save(entity);
-    return this.foundationMapper.mapAsync(result, Foundation, FoundationDTO);
+    return this.foundationMapper.mapAsync(
+      result,
+      Foundation,
+      FoundationReadDTO,
+    );
   }
 
   async update(
     id: string,
-    updateDto: FoundationUpdateDto,
-  ): Promise<FoundationDTO | undefined> {
+    updateDto: FoundationDTO,
+  ): Promise<FoundationReadDTO | undefined> {
     if (!id) throw new Error(`update error: id is empty.`);
     try {
       await this.foundationRepository.update(id, updateDto);
@@ -75,7 +91,7 @@ export class FoundationService {
       return this.foundationMapper.mapAsync(
         foundation,
         Foundation,
-        FoundationDTO,
+        FoundationReadDTO,
       );
     } catch (ex) {
       throw new Error(`findAll error: ${ex.message}.`);

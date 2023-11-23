@@ -8,6 +8,7 @@ import {
   Patch,
   Post as PostMethod,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -15,11 +16,13 @@ import { Roles } from 'src/authentication/decorators/roles.decorator';
 import { Role } from 'src/common/enum/role.enum';
 import { JwtAuthGuard } from 'src/authentication/guards/auth.guard';
 import { RolesGuard } from 'src/authentication/guards/roles.guard';
+import { FoundationReadDTO } from '../services/dto/foundation-read.dto';
 import { FoundationDTO } from '../services/dto/foundation.dto';
-import { FoundationUpdateDto } from '../services/dto/foundation-update.dto';
-import { FoundationCreateDTO } from '../services/dto/foundation-create.dto';
 import { FoundationService } from '../services/foundation.service';
 import { PaginationQueryDto } from 'src/common/base/pagination.dto';
+import { Pagination } from 'nestjs-typeorm-paginate';
+import { Request } from 'express';
+import { User } from 'src/authentication/user/entities/user.entity';
 
 @Controller('foundation')
 @ApiBearerAuth()
@@ -32,10 +35,12 @@ export class FoundationController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({
     status: 200,
-    description: 'List all users',
-    type: FoundationDTO,
+    description: 'List all foundation',
+    type: FoundationReadDTO,
   })
-  async findAll(@Query() paginationQuery: PaginationQueryDto): Promise<any> {
+  async findAll(
+    @Query() paginationQuery: PaginationQueryDto,
+  ): Promise<Pagination<FoundationReadDTO>> {
     return await this.foundationService.findAll(
       paginationQuery.page,
       paginationQuery.limit,
@@ -48,40 +53,43 @@ export class FoundationController {
   @ApiResponse({
     status: 200,
     description: 'The found record',
-    type: FoundationDTO,
+    type: FoundationReadDTO,
   })
-  async getOne(@Param('id') id: string): Promise<any> {
+  async getOne(@Param('id') id: string): Promise<FoundationReadDTO> {
     return await this.foundationService.findById(id);
   }
 
   @Patch(':id')
   @Roles(Role.ADMINPENABUR)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @ApiBody({ type: FoundationUpdateDto })
+  @ApiBody({ type: FoundationDTO })
   @ApiResponse({
     status: 200,
     description: 'Update record',
-    type: FoundationDTO,
+    type: FoundationReadDTO,
   })
   async update(
     @Param('id') id: string,
-    @Body() foundationDto: FoundationUpdateDto,
-  ): Promise<any> {
+    @Body() foundationDto: FoundationDTO,
+  ): Promise<FoundationReadDTO> {
     return await this.foundationService.update(id, foundationDto);
   }
 
   @PostMethod('/')
   @Roles(Role.ADMINPENABUR)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @ApiBody({ type: FoundationCreateDTO })
+  @ApiBody({ type: FoundationDTO })
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
     type: FoundationDTO,
   })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
-  async post(@Body() foundationDto: FoundationCreateDTO): Promise<any> {
-    return await this.foundationService.save(foundationDto);
+  async post(
+    @Body() foundationDto: FoundationDTO,
+    @Req() req: Request,
+  ): Promise<FoundationReadDTO> {
+    const createdBy = (req.user as User).id;
+    return await this.foundationService.save(foundationDto, createdBy);
   }
 
   @Delete('/:id')
@@ -91,7 +99,7 @@ export class FoundationController {
     status: 204,
     description: 'The record has been successfully deleted.',
   })
-  async deleteById(@Param('id') id: string): Promise<any> {
+  async deleteById(@Param('id') id: string): Promise<void> {
     return await this.foundationService.deleteById(id);
   }
 }

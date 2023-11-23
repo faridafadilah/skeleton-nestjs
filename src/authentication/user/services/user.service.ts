@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { RegisterUserDTO } from '../../models/register.dto';
+import { RegisterUserDTO } from '../../services/dto/register.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDTO } from './dto/user.dto';
 import { Mapper } from '@automapper/core';

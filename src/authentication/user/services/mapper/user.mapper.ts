@@ -4,7 +4,7 @@ import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { UserDTO } from '../dto/user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { RegisterUserDTO } from 'src/authentication/models/register.dto';
+import { RegisterUserDTO } from 'src/authentication/services/dto/register.dto';
 import { User } from '../../entities/user.entity';
 
 @Injectable()

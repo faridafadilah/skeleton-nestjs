@@ -2,9 +2,8 @@
 import { Mapper, createMap, forMember, ignore } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+import { FoundationReadDTO } from '../dto/foundation-read.dto';
 import { FoundationDTO } from '../dto/foundation.dto';
-import { FoundationUpdateDto } from '../dto/foundation-update.dto';
-import { FoundationCreateDTO } from '../dto/foundation-create.dto';
 import { Foundation } from '../../entities/foundation.entity';
 @Injectable()
 export class FoundationMapper extends AutomapperProfile {
@@ -14,12 +13,11 @@ export class FoundationMapper extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(mapper, Foundation, FoundationDTO);
-      createMap(mapper, FoundationDTO, Foundation);
-      createMap(mapper, FoundationUpdateDto, Foundation);
+      createMap(mapper, Foundation, FoundationReadDTO);
+      createMap(mapper, FoundationReadDTO, Foundation);
       createMap(
         mapper,
-        FoundationCreateDTO,
+        FoundationDTO,
         Foundation,
         forMember((dest) => dest.id, ignore()),
       );

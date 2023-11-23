@@ -8,9 +8,9 @@ import { JwtService } from '@nestjs/jwt';
 import { expireIn, jwtSecret } from '../decorators/constants';
 import { randomBytes } from 'crypto';
 import * as bcrypt from 'bcrypt';
-import { LoginUserDTO } from '../models/login.dto';
+import { LoginUserDTO } from './dto/login.dto';
 import { Role } from 'src/common/enum/role.enum';
-import { RegisterUserDTO } from '../models/register.dto';
+import { RegisterUserDTO } from './dto/register.dto';
 import { UserService } from '../user/services/user.service';
 
 @Injectable()
