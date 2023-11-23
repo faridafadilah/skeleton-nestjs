@@ -21,7 +21,7 @@ export class ProvinceController {
   @Get()
   @ApiResponse({
     status: 200,
-    description: 'List all users',
+    description: 'List all provinces',
     type: ProvinceDTO,
   })
   async findAll(@Query() paginationQuery: PaginationQueryDto): Promise<any> {
@@ -41,32 +41,30 @@ export class ProvinceController {
     return await this.provinceService.findById(id);
   }
 
-  @Post('/')
+  @Post()
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
     type: ProvinceDTO,
   })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
-  async post(@Body() countryDTO: ProvinceDTO): Promise<ProvinceDTO> {
-    return await this.provinceService.create(countryDTO);
+  async post(@Body() provinceDTO: ProvinceDTO): Promise<ProvinceDTO> {
+    return await this.provinceService.create(provinceDTO);
   }
 
   @Patch(':id')
   @ApiResponse({
     status: 200,
-    description: 'Update Country',
+    description: 'Update Province',
     type: ProvinceDTO,
   })
   async update(
     @Param('id') id: string,
     @Body() provinceDTO: ProvinceDTO,
   ): Promise<ProvinceDTO> {
-    const update = await this.provinceService.update(id, provinceDTO);
-    return update;
+    return await this.provinceService.update(id, provinceDTO);
   }
 
-  @Delete('/:id')
+  @Delete(':id')
   @ApiResponse({
     status: 204,
     description: 'The record has been successfully deleted.',

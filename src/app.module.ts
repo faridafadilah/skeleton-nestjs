@@ -7,9 +7,10 @@ import { ConfigModule } from '@nestjs/config';
 import { dataSourceOptions } from './config/database.config';
 import { UserModule } from './authentication/user/user.module';
 import { AuthModule } from './authentication/auth.module';
-import { ProvinceModule } from './master/province/province.module';
+import { ProvinceModule } from './master/region/province/province.module';
 import { ResponseInterceptor } from './client/request';
 import { YayasanModule } from './master/institution/yayasan/yayasan.module';
+import { RegencyModule } from './master/region/regency/regency.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { YayasanModule } from './master/institution/yayasan/yayasan.module';
     AuthModule,
     ProvinceModule,
     YayasanModule,
+    RegencyModule,
   ],
   controllers: [],
   providers: [

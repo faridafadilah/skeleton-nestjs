@@ -42,7 +42,7 @@ export class UserController {
     type: UserDTO,
   })
   async findOne(@Param('id') id: string): Promise<UserDTO> {
-    const user = await this.userService.findOne(+id);
+    const user = await this.userService.findOne(id);
     if (!user) {
       throw new NotFoundException(`Article with id ${id} Not Found!`);
     }
