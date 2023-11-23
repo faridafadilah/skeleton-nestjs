@@ -1,9 +1,19 @@
 import { AutoMap } from '@automapper/classes';
-import { BaseEntity } from 'src/common/base/base.entity';
-import { Column, Entity, OneToMany } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Regency } from '../../regency/entities/regency.entity';
 @Entity('reg_provinces')
-export class Province extends BaseEntity {
+export class Province {
+  @AutoMap()
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @AutoMap()
   @Column({ type: 'varchar' })
   name: string;
@@ -11,4 +21,14 @@ export class Province extends BaseEntity {
   @AutoMap(() => Regency)
   @OneToMany(() => Regency, (regency) => regency.province)
   regencies: Regency[];
+
+  @AutoMap()
+  @Column({ nullable: true })
+  created_by?: string;
+
+  @CreateDateColumn({ nullable: true })
+  created_at?: Date;
+
+  @UpdateDateColumn({ nullable: true })
+  update_at?: Date;
 }

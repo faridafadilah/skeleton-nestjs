@@ -41,7 +41,7 @@ export class RegencyService {
     };
   }
 
-  async findById(id: string): Promise<RegencyDTO> {
+  async findById(id: number): Promise<RegencyDTO> {
     const regency = await this.findRegencyByIdOrFail(id);
 
     return this.mapper.mapAsync(regency, Regency, RegencyDTO);
@@ -54,7 +54,7 @@ export class RegencyService {
     return this.mapper.mapAsync(savedEntity, Regency, RegencyDTO);
   }
 
-  async update(id: string, updateRegencyDTO: RegencyDTO): Promise<RegencyDTO> {
+  async update(id: number, updateRegencyDTO: RegencyDTO): Promise<RegencyDTO> {
     await this.findRegencyByIdOrFail(id);
     await this.regencyRepository.update(id, updateRegencyDTO);
     const updateRegency = await this.regencyRepository.findOneBy({ id });
@@ -62,12 +62,12 @@ export class RegencyService {
     return this.mapper.mapAsync(updateRegency, Regency, RegencyDTO);
   }
 
-  async deleteById(id: string): Promise<void> {
+  async deleteById(id: number): Promise<void> {
     await this.findRegencyByIdOrFail(id);
     await this.regencyRepository.delete(id);
   }
 
-  private async findRegencyByIdOrFail(id: string): Promise<Regency> {
+  private async findRegencyByIdOrFail(id: number): Promise<Regency> {
     const regency = await this.regencyRepository.findOneBy({ id });
 
     if (!regency) {

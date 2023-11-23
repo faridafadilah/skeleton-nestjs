@@ -37,7 +37,7 @@ export class DistrictController {
     description: 'The found record',
     type: DistrictDTO,
   })
-  async getOne(@Param('id') id: string): Promise<DistrictDTO> {
+  async getOne(@Param('id') id: number): Promise<DistrictDTO> {
     return await this.districtService.findById(id);
   }
 
@@ -58,7 +58,7 @@ export class DistrictController {
     type: DistrictDTO,
   })
   async update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() districtDTO: DistrictDTO,
   ): Promise<DistrictDTO> {
     return await this.districtService.update(id, districtDTO);
@@ -69,7 +69,7 @@ export class DistrictController {
     status: 203,
     description: 'The record has been successfully deleted.',
   })
-  async deleteById(@Param('id') id: string): Promise<void> {
+  async deleteById(@Param('id') id: number): Promise<void> {
     return await this.districtService.deleteById(id);
   }
 }

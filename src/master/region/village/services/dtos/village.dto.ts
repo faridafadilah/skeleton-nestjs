@@ -4,7 +4,7 @@ import { DistrictDTO } from 'src/master/region/district/services/dtos/district.d
 
 export class VillageDTO {
   @AutoMap()
-  id: string;
+  id: number;
 
   @AutoMap()
   @IsString()
@@ -13,5 +13,5 @@ export class VillageDTO {
 
   @AutoMap(() => DistrictDTO)
   @IsNotEmpty()
-  district: DistrictDTO;
+  districtId: DistrictDTO;
 }

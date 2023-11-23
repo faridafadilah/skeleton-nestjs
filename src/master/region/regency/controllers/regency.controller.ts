@@ -37,7 +37,7 @@ export class RegencyController {
     description: 'The found record',
     type: RegencyDTO,
   })
-  async getOne(@Param('id') id: string): Promise<RegencyDTO> {
+  async getOne(@Param('id') id: number): Promise<RegencyDTO> {
     return await this.regencyService.findById(id);
   }
 
@@ -58,7 +58,7 @@ export class RegencyController {
     type: RegencyDTO,
   })
   async update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() regencyDTO: RegencyDTO,
   ): Promise<RegencyDTO> {
     return await this.regencyService.update(id, regencyDTO);
@@ -69,7 +69,7 @@ export class RegencyController {
     status: 203,
     description: 'The record has been successfully deleted.',
   })
-  async deleteById(@Param('id') id: string): Promise<void> {
+  async deleteById(@Param('id') id: number): Promise<void> {
     return await this.regencyService.deleteById(id);
   }
 }

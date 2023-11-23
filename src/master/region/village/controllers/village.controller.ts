@@ -37,7 +37,7 @@ export class VillageController {
     description: 'The found record',
     type: VillageDTO,
   })
-  async getOne(@Param('id') id: string): Promise<VillageDTO> {
+  async getOne(@Param('id') id: number): Promise<VillageDTO> {
     return await this.villageService.findById(id);
   }
 
@@ -58,7 +58,7 @@ export class VillageController {
     type: VillageDTO,
   })
   async update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() villageDTO: VillageDTO,
   ): Promise<VillageDTO> {
     return await this.villageService.update(id, villageDTO);
@@ -69,7 +69,7 @@ export class VillageController {
     status: 203,
     description: 'The record has beedn successfully deleted.',
   })
-  async deleteById(@Param('id') id: string): Promise<void> {
+  async deleteById(@Param('id') id: number): Promise<void> {
     return await this.villageService.deleteById(id);
   }
 }

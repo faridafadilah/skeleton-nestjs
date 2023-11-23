@@ -1,11 +1,22 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Regency } from '../../regency/entities/regency.entity';
-import { BaseEntity } from '../../../../common/base/base.entity';
 import { Village } from '../../village/entities/village.entity';
 
 @Entity('reg_districts')
-export class District extends BaseEntity {
+export class District {
+  @AutoMap()
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @AutoMap()
   @Column({ type: 'varchar' })
   name: string;
@@ -17,4 +28,14 @@ export class District extends BaseEntity {
   @AutoMap(() => Village)
   @OneToMany(() => Village, (village) => village.district)
   villages: Village[];
+
+  @AutoMap()
+  @Column({ nullable: true })
+  created_by?: string;
+
+  @CreateDateColumn({ nullable: true })
+  created_at?: Date;
+
+  @UpdateDateColumn({ nullable: true })
+  update_at?: Date;
 }

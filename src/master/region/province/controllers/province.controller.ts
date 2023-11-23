@@ -37,7 +37,7 @@ export class ProvinceController {
     description: 'The found record',
     type: ProvinceDTO,
   })
-  async getOne(@Param('id') id: string): Promise<ProvinceDTO> {
+  async getOne(@Param('id') id: number): Promise<ProvinceDTO> {
     return await this.provinceService.findById(id);
   }
 
@@ -58,7 +58,7 @@ export class ProvinceController {
     type: ProvinceDTO,
   })
   async update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() provinceDTO: ProvinceDTO,
   ): Promise<ProvinceDTO> {
     return await this.provinceService.update(id, provinceDTO);
@@ -69,7 +69,7 @@ export class ProvinceController {
     status: 204,
     description: 'The record has been successfully deleted.',
   })
-  async deleteById(@Param('id') id: string): Promise<void> {
+  async deleteById(@Param('id') id: number): Promise<void> {
     return await this.provinceService.deleteById(id);
   }
 }

@@ -41,7 +41,7 @@ export class DistrictService {
     };
   }
 
-  async findById(id: string): Promise<DistrictDTO> {
+  async findById(id: number): Promise<DistrictDTO> {
     const district = await this.findDistrictByIdOrFail(id);
 
     return this.mapper.mapAsync(district, District, DistrictDTO);
@@ -55,7 +55,7 @@ export class DistrictService {
   }
 
   async update(
-    id: string,
+    id: number,
     updateDistrictDTO: DistrictDTO,
   ): Promise<DistrictDTO> {
     await this.findDistrictByIdOrFail(id);
@@ -65,12 +65,12 @@ export class DistrictService {
     return this.mapper.mapAsync(updateDistrict, District, DistrictDTO);
   }
 
-  async deleteById(id: string): Promise<void> {
+  async deleteById(id: number): Promise<void> {
     await this.findDistrictByIdOrFail(id);
     await this.districtRepository.delete(id);
   }
 
-  private async findDistrictByIdOrFail(id: string): Promise<District> {
+  private async findDistrictByIdOrFail(id: number): Promise<District> {
     const district = await this.districtRepository.findOneBy({ id });
 
     if (!district) {

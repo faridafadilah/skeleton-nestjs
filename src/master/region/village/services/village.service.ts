@@ -37,7 +37,7 @@ export class VillageService {
     };
   }
 
-  async findById(id: string): Promise<VillageDTO> {
+  async findById(id: number): Promise<VillageDTO> {
     const village = await this.findVillageByIdOrFail(id);
 
     return this.mapper.mapAsync(village, Village, VillageDTO);
@@ -50,7 +50,7 @@ export class VillageService {
     return this.mapper.mapAsync(savedEntity, Village, VillageDTO);
   }
 
-  async update(id: string, updateVillageDTO: VillageDTO): Promise<VillageDTO> {
+  async update(id: number, updateVillageDTO: VillageDTO): Promise<VillageDTO> {
     await this.findVillageByIdOrFail(id);
     await this.villageRepository.update(id, updateVillageDTO);
     const updateVillage = await this.villageRepository.findOneBy({ id });
@@ -58,12 +58,12 @@ export class VillageService {
     return this.mapper.mapAsync(updateVillage, Village, VillageDTO);
   }
 
-  async deleteById(id: string): Promise<void> {
+  async deleteById(id: number): Promise<void> {
     await this.findVillageByIdOrFail(id);
     await this.villageRepository.delete(id);
   }
 
-  private async findVillageByIdOrFail(id: string): Promise<Village> {
+  private async findVillageByIdOrFail(id: number): Promise<Village> {
     const village = await this.villageRepository.findOneBy({ id });
 
     if (!village) {

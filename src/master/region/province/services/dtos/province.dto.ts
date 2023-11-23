@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 export class ProvinceDTO {
   @AutoMap()
-  id: string;
+  id: number;
 
   @AutoMap()
   @IsString()

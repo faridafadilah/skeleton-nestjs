@@ -4,7 +4,7 @@ import { ProvinceDTO } from 'src/master/region/province/services/dtos/province.d
 
 export class RegencyDTO {
   @AutoMap()
-  id: string;
+  id: number;
 
   @AutoMap()
   @IsString()
@@ -13,5 +13,5 @@ export class RegencyDTO {
 
   @AutoMap(() => ProvinceDTO)
   @IsNotEmpty()
-  province: ProvinceDTO;
+  provinceId: ProvinceDTO;
 }
