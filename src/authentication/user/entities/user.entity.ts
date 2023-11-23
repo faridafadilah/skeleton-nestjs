@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne } from 'typeorm';
+import { Entity, Column } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { Exclude } from 'class-transformer';
 import { AutoMap } from '@automapper/classes';

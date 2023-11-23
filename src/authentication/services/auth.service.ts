@@ -47,14 +47,14 @@ export class AuthService {
       if (!token) {
         throw new ForbiddenException();
       }
-
-      return {
+      const data = {
         id: foundUser.id,
         token: token,
         email: foundUser.email,
         name: foundUser.name,
         role: foundUser.role as Role,
       };
+      return data;
     } catch (error) {
       console.log(error);
       throw error;
@@ -71,9 +71,7 @@ export class AuthService {
     const verifyToken = this.generateToken();
     registerDto.password = hashedpassword;
     const newUser = await this.userService.create(registerDto, verifyToken);
-    return {
-      newUser,
-    };
+    return newUser;
   }
 
   async comparePassword(args: { password: string; hash: string }) {
@@ -91,7 +89,7 @@ export class AuthService {
       return token;
     } catch (error) {
       console.log(error);
-      throw new ForbiddenException(); // Or handle the error in a way that makes sense for your application
+      throw new ForbiddenException();
     }
   }
 

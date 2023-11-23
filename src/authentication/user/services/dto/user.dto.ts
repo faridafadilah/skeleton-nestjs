@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsEnum, IsInt, IsString } from 'class-validator';
+import { IsEmail, IsString } from 'class-validator';
 import { Role } from 'src/common/enum/role.enum';
 
 export class UserDTO {

@@ -1,10 +1,8 @@
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsAlphanumeric,
   IsEmail,
   IsEnum,
-  IsInt,
   IsNotEmpty,
   IsString,
   Matches,

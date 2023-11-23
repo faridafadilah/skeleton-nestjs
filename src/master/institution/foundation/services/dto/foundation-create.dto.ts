@@ -1,83 +1,79 @@
 /* eslint-disable prettier/prettier */
-import { Entity, Column, OneToMany } from 'typeorm';
+import { Column } from 'typeorm';
 import { AutoMap } from '@automapper/classes';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { TYPE_INSTITUTION } from 'src/common/enum/type-institution.enum';
-import { BaseEntity } from '../../../../common/base/base.entity';
+import { IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-@Entity('yayasan')
-export class Yayasan extends BaseEntity {
+export class FoundationCreateDTO {
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   name: string;
 
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   code: string;
 
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   address: string;
 
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   phone: string;
 
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   province: string;
 
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   city: string;
 
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   district: string;
 
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   village: string;
 
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   rt: string;
 
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   rw: string;
 
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   postal_code: string;
 
+  @ApiProperty()
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
   longlat: string;
-
-  @AutoMap()
-  @Column({ type: 'enum', enum: TYPE_INSTITUTION })
-  @IsNotEmpty()
-  @IsEnum(TYPE_INSTITUTION)
-  type_institution: TYPE_INSTITUTION;
-
-  @Column({ type: 'varchar', nullable: true })
-  @IsString()
-  level_id?: string;
-
-  @Column({ type: 'varchar', nullable: true })
-  @IsString()
-  level_name?: string;
 }

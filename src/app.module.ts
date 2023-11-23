@@ -9,8 +9,8 @@ import { UserModule } from './authentication/user/user.module';
 import { AuthModule } from './authentication/auth.module';
 import { ProvinceModule } from './master/region/province/province.module';
 import { ResponseInterceptor } from './client/request';
-import { YayasanModule } from './master/institution/yayasan/yayasan.module';
 import { RegencyModule } from './master/region/regency/regency.module';
+import { FoundationModule } from './master/institution/foundation/foundation.module';
 
 @Module({
   imports: [
@@ -24,7 +24,7 @@ import { RegencyModule } from './master/region/regency/regency.module';
     UserModule,
     AuthModule,
     ProvinceModule,
-    YayasanModule,
+    FoundationModule,
     RegencyModule,
   ],
   controllers: [],
