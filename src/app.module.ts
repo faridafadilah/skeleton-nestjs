@@ -13,6 +13,9 @@ import { RegencyModule } from './master/region/regency/regency.module';
 import { FoundationModule } from './master/institution/foundation/foundation.module';
 import { DistrictModule } from './master/region/district/district.module';
 import { VillageModule } from './master/region/village/village.module';
+import { DocumentFoundationModule } from './master/institution/document-foundation/document-foundation.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -30,6 +33,12 @@ import { VillageModule } from './master/region/village/village.module';
     RegencyModule,
     DistrictModule,
     VillageModule,
+    DocumentFoundationModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'public/uploads/'),
+      serveRoot: '/public/uploads/',
+      exclude: ['/api*'],
+    }),
   ],
   controllers: [],
   providers: [
