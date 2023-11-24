@@ -11,7 +11,7 @@ import {
 import { ProvinceService } from '../services/province.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProvinceDTO } from '../services/dtos/province.dto';
-import { PaginationQueryDto } from 'src/common/base/pagination.dto';
+import { PaginationQueryDto } from 'src/common/base/base-pagination';
 
 @Controller('provinces')
 @ApiTags('provinces')

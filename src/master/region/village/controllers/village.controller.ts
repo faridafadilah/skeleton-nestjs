@@ -11,7 +11,7 @@ import {
 import { VillageService } from '../services/village.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { VillageDTO } from '../services/dtos/village.dto';
-import { PaginationQueryDto } from 'src/common/base/pagination.dto';
+import { PaginationQueryDto } from 'src/common/base/base-pagination';
 
 @Controller('villages')
 @ApiTags('villages')

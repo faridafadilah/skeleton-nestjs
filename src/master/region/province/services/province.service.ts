@@ -4,7 +4,6 @@ import { InjectMapper } from '@automapper/nestjs';
 import { ProvinceDTO } from './dtos/province.dto';
 import { Province } from '../entities/province.entity';
 import { Mapper } from '@automapper/core';
-import { FindManyOptions } from 'typeorm';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { Regency } from '../../regency/entities/regency.entity';
 import { RegencyDTO } from '../../regency/services/dtos/regency.dto';

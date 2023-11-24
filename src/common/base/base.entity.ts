@@ -16,9 +16,9 @@ export abstract class BaseEntity {
   @Column({ nullable: true })
   createdBy?: string;
 
-  @CreateDateColumn({ nullable: true })
+  @CreateDateColumn({ nullable: true, name: 'created_at' })
   createdAt?: Date;
 
-  @UpdateDateColumn({ nullable: true })
+  @UpdateDateColumn({ nullable: true, name: 'update_at' })
   updatedAt?: Date;
 }

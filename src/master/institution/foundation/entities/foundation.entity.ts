@@ -58,9 +58,9 @@ export class Foundation extends BaseEntity {
   rw: string;
 
   @AutoMap()
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', name: 'postal_code' })
   @IsString()
-  postal_code: string;
+  postalCode: string;
 
   @AutoMap()
   @Column({ type: 'varchar' })
@@ -68,16 +68,16 @@ export class Foundation extends BaseEntity {
   longlat: string;
 
   @AutoMap()
-  @Column({ type: 'enum', enum: TYPE_INSTITUTION })
+  @Column({ type: 'enum', enum: TYPE_INSTITUTION, name: 'type_institution' })
   @IsNotEmpty()
   @IsEnum(TYPE_INSTITUTION)
-  type_institution: TYPE_INSTITUTION;
+  typeInstitution: TYPE_INSTITUTION;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'varchar', nullable: true, name: 'level_id' })
   @IsString()
-  level_id?: string;
+  levelId?: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'varchar', nullable: true, name: 'level_name' })
   @IsString()
-  level_name?: string;
+  levelName?: string;
 }

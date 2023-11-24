@@ -11,7 +11,7 @@ import {
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { DistrictService } from '../services/district.service';
 import { DistrictDTO } from '../services/dtos/district.dto';
-import { PaginationQueryDto } from 'src/common/base/pagination.dto';
+import { PaginationQueryDto } from 'src/common/base/base-pagination';
 
 @Controller('districts')
 @ApiTags('districts')

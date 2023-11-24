@@ -19,7 +19,7 @@ import { RolesGuard } from 'src/authentication/guards/roles.guard';
 import { FoundationReadDTO } from '../services/dto/foundation-read.dto';
 import { FoundationDTO } from '../services/dto/foundation.dto';
 import { FoundationService } from '../services/foundation.service';
-import { PaginationQueryDto } from 'src/common/base/pagination.dto';
+import { PaginationQueryDto } from 'src/common/base/base-pagination';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { Request } from 'express';
 import { User } from 'src/authentication/user/entities/user.entity';
@@ -41,10 +41,7 @@ export class FoundationController {
   async findAll(
     @Query() paginationQuery: PaginationQueryDto,
   ): Promise<Pagination<FoundationReadDTO>> {
-    return await this.foundationService.findAll(
-      paginationQuery.page,
-      paginationQuery.limit,
-    );
+    return await this.foundationService.findAll(paginationQuery);
   }
 
   @Get('/:id')

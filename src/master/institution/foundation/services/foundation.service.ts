@@ -9,28 +9,58 @@ import { FoundationReadDTO } from './dto/foundation-read.dto';
 import { FoundationDTO } from './dto/foundation.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { FindManyOptions } from 'typeorm';
+import { GenericSearch } from 'src/common/base/base-search';
+import { PaginationQueryDto } from 'src/common/base/base-pagination';
 
 @Injectable()
 export class FoundationService {
   constructor(
     private readonly foundationRepository: FoundationRepository,
     @InjectMapper() private readonly foundationMapper: Mapper,
+    protected readonly genericSearch: GenericSearch<Foundation>,
   ) {}
 
-  async findAll(page = 1, limit = 10): Promise<Pagination<FoundationReadDTO>> {
+  async findAll(
+    paginationQuery: PaginationQueryDto,
+  ): Promise<Pagination<FoundationReadDTO>> {
+    const {
+      page = 1,
+      limit = 10,
+      search,
+      orderBy,
+      sortOrder,
+    } = paginationQuery;
+
     const findOptions: FindManyOptions<Foundation> = {
       where: {
-        type_institution: TYPE_INSTITUTION.FOUNDATION,
+        typeInstitution: TYPE_INSTITUTION.FOUNDATION,
       },
       take: limit,
       skip: (page - 1) * limit,
+      order: orderBy && sortOrder ? { [orderBy]: sortOrder } : undefined,
     };
 
-    const [foundation, total] =
-      await this.foundationRepository.findAndCount(findOptions);
+    let searchResult: { items: Foundation[]; totalCount: number };
+
+    if (search) {
+      searchResult = await this.genericSearch.search(
+        this.foundationRepository,
+        ['name', 'code'],
+        search,
+        limit,
+        (page - 1) * limit,
+        sortOrder,
+        orderBy,
+        { typeInstitution: TYPE_INSTITUTION.FOUNDATION },
+      );
+    } else {
+      const [items, totalCount] =
+        await this.foundationRepository.findAndCount(findOptions);
+      searchResult = { items, totalCount };
+    }
 
     const mappedFoundation = this.foundationMapper.mapArray(
-      foundation,
+      searchResult.items,
       Foundation,
       FoundationReadDTO,
     );
@@ -38,10 +68,10 @@ export class FoundationService {
     return {
       items: mappedFoundation,
       meta: {
-        totalItems: total,
+        totalItems: searchResult.totalCount,
         itemCount: mappedFoundation.length,
         itemsPerPage: limit,
-        totalPages: Math.ceil(total / limit),
+        totalPages: Math.ceil(searchResult.totalCount / limit),
         currentPage: page,
       },
     };
@@ -51,7 +81,7 @@ export class FoundationService {
     const result = await this.foundationRepository.findOne({
       where: {
         id: id,
-        type_institution: TYPE_INSTITUTION.FOUNDATION,
+        typeInstitution: TYPE_INSTITUTION.FOUNDATION,
       },
     });
     return this.foundationMapper.mapAsync(
@@ -70,7 +100,7 @@ export class FoundationService {
       FoundationDTO,
       Foundation,
     );
-    entity.type_institution = TYPE_INSTITUTION.FOUNDATION;
+    entity.typeInstitution = TYPE_INSTITUTION.FOUNDATION;
     entity.createdBy = createdBy;
     const result = await this.foundationRepository.save(entity);
     return this.foundationMapper.mapAsync(

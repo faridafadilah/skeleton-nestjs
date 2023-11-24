@@ -14,7 +14,7 @@ import { HttpExceptionFilter } from '../../../common/database-exception.filter';
 import { UserService } from '../services/user.service';
 import { UserDTO } from '../services/dto/user.dto';
 import { UpdateUserDto } from '../services/dto/update-user.dto';
-import { PaginationQueryDto } from 'src/common/base/pagination.dto';
+import { PaginationQueryDto } from 'src/common/base/base-pagination';
 
 @Controller('user')
 @ApiTags('users')

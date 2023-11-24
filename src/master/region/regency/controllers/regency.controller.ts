@@ -11,7 +11,7 @@ import {
 import { RegencyService } from '../services/regency.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RegencyDTO } from '../services/dtos/regency.dto';
-import { PaginationQueryDto } from 'src/common/base/pagination.dto';
+import { PaginationQueryDto } from 'src/common/base/base-pagination';
 
 @Controller('regencies')
 @ApiTags('regencies')
