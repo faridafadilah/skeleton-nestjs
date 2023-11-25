@@ -4,13 +4,16 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { DistrictService } from '../services/district.service';
-import { DistrictDTO } from '../services/dtos/district.dto';
+import { DistrictReadDTO } from '../services/dtos/district-read.dto';
+import { DistrictCreateDTO } from '../services/dtos/district-create.dto';
+import { DistrictUpdateDTO } from '../services/dtos/district-update.dto';
 import { PaginationQueryDto } from 'src/common/base/base-pagination';
 
 @Controller('districts')
@@ -22,7 +25,7 @@ export class DistrictController {
   @ApiResponse({
     status: 200,
     description: 'List all districts',
-    type: DistrictDTO,
+    type: DistrictReadDTO,
   })
   async findAll(@Query() paginationQuery: PaginationQueryDto): Promise<any> {
     return await this.districtService.findAll(
@@ -35,9 +38,11 @@ export class DistrictController {
   @ApiResponse({
     status: 200,
     description: 'The found record',
-    type: DistrictDTO,
+    type: DistrictReadDTO,
   })
-  async getOne(@Param('id') id: number): Promise<DistrictDTO> {
+  async getOne(
+    @Param('id', new ParseIntPipe()) id: number,
+  ): Promise<DistrictReadDTO> {
     return await this.districtService.findById(id);
   }
 
@@ -45,23 +50,25 @@ export class DistrictController {
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
-    type: DistrictDTO,
+    type: DistrictCreateDTO,
   })
-  async post(@Body() districtDTO: DistrictDTO): Promise<DistrictDTO> {
-    return await this.districtService.create(districtDTO);
+  async post(
+    @Body() districtCreateDTO: DistrictCreateDTO,
+  ): Promise<DistrictReadDTO> {
+    return await this.districtService.create(districtCreateDTO);
   }
 
   @Patch(':id')
   @ApiResponse({
     status: 200,
     description: 'Update district',
-    type: DistrictDTO,
+    type: DistrictUpdateDTO,
   })
   async update(
-    @Param('id') id: number,
-    @Body() districtDTO: DistrictDTO,
-  ): Promise<DistrictDTO> {
-    return await this.districtService.update(id, districtDTO);
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() districtUpdateDTO: DistrictUpdateDTO,
+  ): Promise<DistrictReadDTO> {
+    return await this.districtService.update(id, districtUpdateDTO);
   }
 
   @Delete(':id')
@@ -69,7 +76,7 @@ export class DistrictController {
     status: 203,
     description: 'The record has been successfully deleted.',
   })
-  async deleteById(@Param('id') id: number): Promise<void> {
+  async deleteById(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
     return await this.districtService.deleteById(id);
   }
 }

@@ -25,21 +25,26 @@ export class District {
   @AutoMap(() => Regency)
   @ManyToOne(() => Regency, (regency) => regency.districts, {
     nullable: false,
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'regencyId' })
   regency: Regency;
 
   @AutoMap(() => Village)
-  @OneToMany(() => Village, (village) => village.district)
+  @OneToMany(() => Village, (village) => village.district, {
+    cascade: true,
+  })
   villages: Village[];
 
   @AutoMap()
   @Column({ nullable: true })
-  created_by?: string;
+  createdBy?: string;
 
+  @AutoMap()
   @CreateDateColumn({ nullable: true })
-  created_at?: Date;
+  createdAt?: Date;
 
+  @AutoMap()
   @UpdateDateColumn({ nullable: true })
-  update_at?: Date;
+  updatedAt?: Date;
 }

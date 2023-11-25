@@ -19,16 +19,20 @@ export class Province {
   name: string;
 
   @AutoMap(() => Regency)
-  @OneToMany(() => Regency, (regency) => regency.province)
+  @OneToMany(() => Regency, (regency) => regency.province, {
+    cascade: true,
+  })
   regencies: Regency[];
 
   @AutoMap()
   @Column({ nullable: true })
-  created_by?: string;
+  createdBy?: string;
 
+  @AutoMap()
   @CreateDateColumn({ nullable: true })
-  created_at?: Date;
+  createdAt?: Date;
 
+  @AutoMap()
   @UpdateDateColumn({ nullable: true })
-  update_at?: Date;
+  updatedAt?: Date;
 }

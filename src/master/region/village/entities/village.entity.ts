@@ -23,17 +23,20 @@ export class Village {
   @AutoMap(() => District)
   @ManyToOne(() => District, (district) => district.villages, {
     nullable: false,
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'districtId' })
   district: District;
 
   @AutoMap()
   @Column({ nullable: true })
-  created_by?: string;
+  createdBy?: string;
 
+  @AutoMap()
   @CreateDateColumn({ nullable: true })
-  created_at?: Date;
+  createdAt?: Date;
 
+  @AutoMap()
   @UpdateDateColumn({ nullable: true })
-  update_at?: Date;
+  updatedAt?: Date;
 }

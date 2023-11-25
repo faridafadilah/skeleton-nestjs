@@ -1,8 +1,10 @@
-import { Mapper, createMap } from '@automapper/core';
+import { Mapper, createMap, forMember, ignore } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ProvinceDTO } from '../dtos/province.dto';
 import { Province } from '../../entities/province.entity';
+import { ProvinceCreateDTO } from '../dtos/province-create.dto';
+import { ProvinceUpdateDTO } from '../dtos/province-update.dto';
+import { ProvinceReadDTO } from '../dtos/province-read.dto';
 
 @Injectable()
 export class ProvinceMapper extends AutomapperProfile {
@@ -12,8 +14,14 @@ export class ProvinceMapper extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(mapper, Province, ProvinceDTO);
-      createMap(mapper, ProvinceDTO, Province);
+      createMap(mapper, Province, ProvinceReadDTO);
+      createMap(
+        mapper,
+        ProvinceCreateDTO,
+        Province,
+        forMember((dest) => dest.id, ignore()),
+      );
+      createMap(mapper, ProvinceUpdateDTO, Province);
     };
   }
 }

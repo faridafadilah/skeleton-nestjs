@@ -7,10 +7,13 @@ import {
   Post,
   Query,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { VillageService } from '../services/village.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { VillageDTO } from '../services/dtos/village.dto';
+import { VillageReadDTO } from '../services/dtos/village-read.dto';
+import { VillageCreateDTO } from '../services/dtos/village-create.dto';
+import { VillageUpdateDTO } from '../services/dtos/village-update.dto';
 import { PaginationQueryDto } from 'src/common/base/base-pagination';
 
 @Controller('villages')
@@ -22,7 +25,7 @@ export class VillageController {
   @ApiResponse({
     status: 200,
     description: 'List all villages',
-    type: VillageDTO,
+    type: VillageReadDTO,
   })
   async findAll(@Query() paginationQuery: PaginationQueryDto): Promise<any> {
     return await this.villageService.findAll(
@@ -35,9 +38,11 @@ export class VillageController {
   @ApiResponse({
     status: 200,
     description: 'The found record',
-    type: VillageDTO,
+    type: VillageReadDTO,
   })
-  async getOne(@Param('id') id: number): Promise<VillageDTO> {
+  async getOne(
+    @Param('id', new ParseIntPipe()) id: number,
+  ): Promise<VillageReadDTO> {
     return await this.villageService.findById(id);
   }
 
@@ -45,22 +50,24 @@ export class VillageController {
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
-    type: VillageDTO,
+    type: VillageCreateDTO,
   })
-  async post(@Body() villageDTO: VillageDTO): Promise<VillageDTO> {
-    return await this.villageService.create(villageDTO);
+  async post(
+    @Body() villageCreateDTO: VillageCreateDTO,
+  ): Promise<VillageReadDTO> {
+    return await this.villageService.create(villageCreateDTO);
   }
 
   @Patch(':id')
   @ApiResponse({
     status: 200,
     description: 'Update village',
-    type: VillageDTO,
+    type: VillageUpdateDTO,
   })
   async update(
-    @Param('id') id: number,
-    @Body() villageDTO: VillageDTO,
-  ): Promise<VillageDTO> {
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() villageDTO: VillageUpdateDTO,
+  ): Promise<VillageReadDTO> {
     return await this.villageService.update(id, villageDTO);
   }
 
@@ -69,7 +76,7 @@ export class VillageController {
     status: 203,
     description: 'The record has beedn successfully deleted.',
   })
-  async deleteById(@Param('id') id: number): Promise<void> {
+  async deleteById(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
     return await this.villageService.deleteById(id);
   }
 }

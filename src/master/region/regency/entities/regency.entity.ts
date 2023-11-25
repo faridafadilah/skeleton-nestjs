@@ -16,7 +16,7 @@ import { District } from '../../district/entities/district.entity';
 export class Regency {
   @AutoMap()
   @PrimaryGeneratedColumn()
-  id?: number;
+  id: number;
 
   @AutoMap()
   @Column({ type: 'varchar' })
@@ -24,22 +24,26 @@ export class Regency {
 
   @AutoMap(() => Province)
   @ManyToOne(() => Province, (province) => province.regencies, {
-    nullable: false,
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'provinceId' })
   province: Province;
 
   @AutoMap(() => District)
-  @OneToMany(() => District, (district) => district.regency)
+  @OneToMany(() => District, (district) => district.regency, {
+    cascade: true,
+  })
   districts: District[];
 
   @AutoMap()
   @Column({ nullable: true })
-  created_by?: string;
+  createdBy?: string;
 
+  @AutoMap()
   @CreateDateColumn({ nullable: true })
-  created_at?: Date;
+  createdAt?: Date;
 
+  @AutoMap()
   @UpdateDateColumn({ nullable: true })
-  update_at?: Date;
+  updatedAt?: Date;
 }

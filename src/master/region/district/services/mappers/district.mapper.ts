@@ -1,8 +1,10 @@
-import { Mapper, createMap } from '@automapper/core';
+import { Mapper, createMap, forMember, ignore } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { District } from '../../entities/district.entity';
-import { DistrictDTO } from '../dtos/district.dto';
+import { DistrictReadDTO } from '../dtos/district-read.dto';
+import { DistrictCreateDTO } from '../dtos/district-create.dto';
+import { DistrictUpdateDTO } from '../dtos/district-update.dto';
 
 @Injectable()
 export class DistrictMapper extends AutomapperProfile {
@@ -12,8 +14,14 @@ export class DistrictMapper extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(mapper, District, DistrictDTO);
-      createMap(mapper, DistrictDTO, District);
+      createMap(mapper, District, DistrictReadDTO);
+      createMap(
+        mapper,
+        DistrictCreateDTO,
+        District,
+        forMember((dest) => dest.id, ignore()),
+      );
+      createMap(mapper, DistrictUpdateDTO, District);
     };
   }
 }

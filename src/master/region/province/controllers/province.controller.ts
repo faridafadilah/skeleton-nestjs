@@ -7,10 +7,13 @@ import {
   Post,
   Delete,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ProvinceService } from '../services/province.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ProvinceDTO } from '../services/dtos/province.dto';
+import { ProvinceReadDTO } from '../services/dtos/province-read.dto';
+import { ProvinceCreateDTO } from '../services/dtos/province-create.dto';
+import { ProvinceUpdateDTO } from '../services/dtos/province-update.dto';
 import { PaginationQueryDto } from 'src/common/base/base-pagination';
 
 @Controller('provinces')
@@ -22,7 +25,7 @@ export class ProvinceController {
   @ApiResponse({
     status: 200,
     description: 'List all provinces',
-    type: ProvinceDTO,
+    type: ProvinceReadDTO,
   })
   async findAll(@Query() paginationQuery: PaginationQueryDto): Promise<any> {
     return await this.provinceService.findAll(
@@ -35,9 +38,11 @@ export class ProvinceController {
   @ApiResponse({
     status: 200,
     description: 'The found record',
-    type: ProvinceDTO,
+    type: ProvinceReadDTO,
   })
-  async getOne(@Param('id') id: number): Promise<ProvinceDTO> {
+  async getOne(
+    @Param('id', new ParseIntPipe()) id: number,
+  ): Promise<ProvinceReadDTO> {
     return await this.provinceService.findById(id);
   }
 
@@ -45,23 +50,25 @@ export class ProvinceController {
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
-    type: ProvinceDTO,
+    type: ProvinceCreateDTO,
   })
-  async post(@Body() provinceDTO: ProvinceDTO): Promise<ProvinceDTO> {
-    return await this.provinceService.create(provinceDTO);
+  async post(
+    @Body() provinceCreateDTO: ProvinceCreateDTO,
+  ): Promise<ProvinceReadDTO> {
+    return await this.provinceService.create(provinceCreateDTO);
   }
 
   @Patch(':id')
   @ApiResponse({
     status: 200,
     description: 'Update Province',
-    type: ProvinceDTO,
+    type: ProvinceUpdateDTO,
   })
   async update(
-    @Param('id') id: number,
-    @Body() provinceDTO: ProvinceDTO,
-  ): Promise<ProvinceDTO> {
-    return await this.provinceService.update(id, provinceDTO);
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() provinceUpdateDTO: ProvinceUpdateDTO,
+  ): Promise<ProvinceReadDTO> {
+    return await this.provinceService.update(id, provinceUpdateDTO);
   }
 
   @Delete(':id')
@@ -69,7 +76,7 @@ export class ProvinceController {
     status: 204,
     description: 'The record has been successfully deleted.',
   })
-  async deleteById(@Param('id') id: number): Promise<void> {
+  async deleteById(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
     return await this.provinceService.deleteById(id);
   }
 }

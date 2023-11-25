@@ -4,13 +4,16 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
 } from '@nestjs/common';
 import { RegencyService } from '../services/regency.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { RegencyDTO } from '../services/dtos/regency.dto';
+import { RegencyReadDTO } from '../services/dtos/regency-read.dto';
+import { RegencyCreateDTO } from '../services/dtos/regency-create.dto';
+import { RegencyUpdateDTO } from '../services/dtos/regency-update.dto';
 import { PaginationQueryDto } from 'src/common/base/base-pagination';
 
 @Controller('regencies')
@@ -22,7 +25,7 @@ export class RegencyController {
   @ApiResponse({
     status: 200,
     description: 'List all regencies',
-    type: RegencyDTO,
+    type: RegencyReadDTO,
   })
   async findAll(@Query() paginationQuery: PaginationQueryDto): Promise<any> {
     return await this.regencyService.findAll(
@@ -35,9 +38,11 @@ export class RegencyController {
   @ApiResponse({
     status: 200,
     description: 'The found record',
-    type: RegencyDTO,
+    type: RegencyReadDTO,
   })
-  async getOne(@Param('id') id: number): Promise<RegencyDTO> {
+  async getOne(
+    @Param('id', new ParseIntPipe()) id: number,
+  ): Promise<RegencyReadDTO> {
     return await this.regencyService.findById(id);
   }
 
@@ -45,23 +50,25 @@ export class RegencyController {
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
-    type: RegencyDTO,
+    type: RegencyCreateDTO,
   })
-  async post(@Body() regencyDTO: RegencyDTO): Promise<RegencyDTO> {
-    return await this.regencyService.create(regencyDTO);
+  async post(
+    @Body() regencyCreateDTO: RegencyCreateDTO,
+  ): Promise<RegencyReadDTO> {
+    return await this.regencyService.create(regencyCreateDTO);
   }
 
   @Patch(':id')
   @ApiResponse({
     status: 200,
     description: 'Update regency',
-    type: RegencyDTO,
+    type: RegencyUpdateDTO,
   })
   async update(
-    @Param('id') id: number,
-    @Body() regencyDTO: RegencyDTO,
-  ): Promise<RegencyDTO> {
-    return await this.regencyService.update(id, regencyDTO);
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() regencyUpdateDTO: RegencyUpdateDTO,
+  ): Promise<RegencyReadDTO> {
+    return await this.regencyService.update(id, regencyUpdateDTO);
   }
 
   @Delete(':id')
@@ -69,7 +76,7 @@ export class RegencyController {
     status: 203,
     description: 'The record has been successfully deleted.',
   })
-  async deleteById(@Param('id') id: number): Promise<void> {
+  async deleteById(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
     return await this.regencyService.deleteById(id);
   }
 }

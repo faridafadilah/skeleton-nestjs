@@ -6,11 +6,9 @@ import {
   Param,
   Delete,
   NotFoundException,
-  UseFilters,
   Query,
 } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { HttpExceptionFilter } from '../../../common/database-exception.filter';
 import { UserService } from '../services/user.service';
 import { UserDTO } from '../services/dto/user.dto';
 import { UpdateUserDto } from '../services/dto/update-user.dto';
@@ -18,7 +16,6 @@ import { PaginationQueryDto } from 'src/common/base/base-pagination';
 
 @Controller('user')
 @ApiTags('users')
-@UseFilters(new HttpExceptionFilter())
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

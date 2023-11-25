@@ -2,38 +2,40 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { DistrictRepository } from '../repositories/district.repository';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
-import { DistrictDTO } from './dtos/district.dto';
-import { FindManyOptions } from 'typeorm';
+import { DistrictReadDTO } from './dtos/district-read.dto';
 import { District } from '../entities/district.entity';
 import { Pagination } from 'nestjs-typeorm-paginate';
+import { DistrictCreateDTO } from './dtos/district-create.dto';
+import { DistrictUpdateDTO } from './dtos/district-update.dto';
+import { RegencyRepository } from '../../regency/repositories/regency.repository';
+import { Regency } from '../../regency/entities/regency.entity';
 
 @Injectable()
 export class DistrictService {
   constructor(
     private readonly districtRepository: DistrictRepository,
+    private readonly regencyRepository: RegencyRepository,
     @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
-  async findAll(page = 1, limit = 10): Promise<Pagination<DistrictDTO>> {
-    const findOptions: FindManyOptions<District> = {
-      take: limit,
+  async findAll(page = 1, limit = 10): Promise<Pagination<DistrictReadDTO>> {
+    const [districts, total] = await this.districtRepository.findAndCount({
+      relations: { villages: true },
       skip: (page - 1) * limit,
-    };
+      take: limit,
+    });
 
-    const [districts, total] =
-      await this.districtRepository.findAndCount(findOptions);
-
-    const mappedDistrits = this.mapper.mapArray(
+    const mappedDistricts = this.mapper.mapArray(
       districts,
       District,
-      DistrictDTO,
+      DistrictReadDTO,
     );
 
     return {
-      items: mappedDistrits,
+      items: mappedDistricts,
       meta: {
         totalItems: total,
-        itemCount: mappedDistrits.length,
+        itemCount: mappedDistricts.length,
         itemsPerPage: limit,
         totalPages: Math.ceil(total / limit),
         currentPage: page,
@@ -41,33 +43,58 @@ export class DistrictService {
     };
   }
 
-  async findById(id: number): Promise<DistrictDTO> {
+  async findById(id: number): Promise<DistrictReadDTO> {
     const district = await this.findDistrictByIdOrFail(id);
 
-    return this.mapper.mapAsync(district, District, DistrictDTO);
+    return this.mapper.mapAsync(district, District, DistrictReadDTO);
   }
 
-  async create(districtDTO: DistrictDTO): Promise<DistrictDTO> {
-    const entity = this.mapper.map(districtDTO, DistrictDTO, District);
+  async create(districtCreateDTO: DistrictCreateDTO): Promise<DistrictReadDTO> {
+    const entity = this.mapper.map(
+      districtCreateDTO,
+      DistrictCreateDTO,
+      District,
+    );
+
+    entity.regency = await this.findRegencyByIdOrFail(
+      districtCreateDTO.regencyId,
+    );
+
     const savedEntity = await this.districtRepository.save(entity);
 
-    return this.mapper.mapAsync(savedEntity, District, DistrictDTO);
+    return this.mapper.mapAsync(savedEntity, District, DistrictReadDTO);
   }
 
   async update(
     id: number,
-    updateDistrictDTO: DistrictDTO,
-  ): Promise<DistrictDTO> {
-    await this.findDistrictByIdOrFail(id);
-    await this.districtRepository.update(id, updateDistrictDTO);
-    const updateDistrict = await this.districtRepository.findOneBy({ id });
+    updateDistrictDTO: DistrictUpdateDTO,
+  ): Promise<DistrictReadDTO> {
+    const district = await this.findDistrictByIdOrFail(id);
 
-    return this.mapper.mapAsync(updateDistrict, District, DistrictDTO);
+    Object.assign(district, updateDistrictDTO);
+
+    district.regency = await this.findRegencyByIdOrFail(
+      updateDistrictDTO.regencyId,
+    );
+
+    await this.districtRepository.save(district);
+
+    return this.mapper.mapAsync(district, District, DistrictReadDTO);
   }
 
   async deleteById(id: number): Promise<void> {
     await this.findDistrictByIdOrFail(id);
     await this.districtRepository.delete(id);
+  }
+
+  private async findRegencyByIdOrFail(id: number): Promise<Regency> {
+    const regency = await this.regencyRepository.findOneBy({ id });
+
+    if (!regency) {
+      throw new NotFoundException(`Regency with ID '${id}' not found`);
+    }
+
+    return regency;
   }
 
   private async findDistrictByIdOrFail(id: number): Promise<District> {

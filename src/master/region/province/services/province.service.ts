@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ProvinceRepository } from '../repositories/province.repository';
 import { InjectMapper } from '@automapper/nestjs';
-import { ProvinceDTO } from './dtos/province.dto';
+import { ProvinceReadDTO } from './dtos/province-read.dto';
 import { Province } from '../entities/province.entity';
 import { Mapper } from '@automapper/core';
 import { Pagination } from 'nestjs-typeorm-paginate';
-import { Regency } from '../../regency/entities/regency.entity';
-import { RegencyDTO } from '../../regency/services/dtos/regency.dto';
+import { ProvinceCreateDTO } from './dtos/province-create.dto';
+import { ProvinceUpdateDTO } from './dtos/province-update.dto';
 
 @Injectable()
 export class ProvinceService {
@@ -15,33 +15,17 @@ export class ProvinceService {
     @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
-  async findAll(page = 1, limit = 10): Promise<Pagination<ProvinceDTO>> {
-    const skip = (page - 1) * limit;
+  async findAll(page = 1, limit = 10): Promise<Pagination<ProvinceReadDTO>> {
     const [provinces, total] = await this.provinceRepository.findAndCount({
-      relations: ['regencies'],
-      skip,
+      relations: { regencies: true },
+      skip: (page - 1) * limit,
       take: limit,
     });
 
     const mappedProvinces = this.mapper.mapArray(
       provinces,
       Province,
-      ProvinceDTO,
-    );
-
-    console.log(provinces);
-    await Promise.all(
-      mappedProvinces.map(async (companyDTO) => {
-        if (companyDTO.regencies) {
-          companyDTO.regencies = await this.mapper.mapArrayAsync(
-            companyDTO.regencies as unknown as Regency[],
-            Regency,
-            RegencyDTO,
-          );
-        } else {
-          companyDTO.regencies = [];
-        }
-      }),
+      ProvinceReadDTO,
     );
 
     return {
@@ -56,28 +40,28 @@ export class ProvinceService {
     };
   }
 
-  async findById(id: number): Promise<ProvinceDTO> {
+  async findById(id: number): Promise<ProvinceReadDTO> {
     const province = await this.findProvinceByIdOrFail(id);
 
-    return this.mapper.mapAsync(province, Province, ProvinceDTO);
+    return this.mapper.mapAsync(province, Province, ProvinceReadDTO);
   }
 
-  async create(provinceDTO: ProvinceDTO): Promise<ProvinceDTO> {
-    const entity = this.mapper.map(provinceDTO, ProvinceDTO, Province);
+  async create(provinceDTO: ProvinceCreateDTO): Promise<ProvinceReadDTO> {
+    const entity = this.mapper.map(provinceDTO, ProvinceCreateDTO, Province);
     const savedEntity = await this.provinceRepository.save(entity);
 
-    return this.mapper.mapAsync(savedEntity, Province, ProvinceDTO);
+    return this.mapper.mapAsync(savedEntity, Province, ProvinceReadDTO);
   }
 
   async update(
     id: number,
-    updateProvinceDTO: ProvinceDTO,
-  ): Promise<ProvinceDTO> {
+    updateProvinceDTO: ProvinceUpdateDTO,
+  ): Promise<ProvinceReadDTO> {
     await this.findProvinceByIdOrFail(id);
     await this.provinceRepository.update(id, updateProvinceDTO);
     const updatedProvince = await this.provinceRepository.findOneBy({ id });
 
-    return this.mapper.mapAsync(updatedProvince, Province, ProvinceDTO);
+    return this.mapper.mapAsync(updatedProvince, Province, ProvinceReadDTO);
   }
 
   async deleteById(id: number): Promise<void> {

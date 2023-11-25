@@ -2,28 +2,33 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { VillageRepository } from '../repositories/village.repository';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
-import { FindManyOptions } from 'typeorm';
 import { Village } from '../entities/village.entity';
-import { VillageDTO } from './dtos/village.dto';
+import { VillageReadDTO } from './dtos/village-read.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
+import { VillageCreateDTO } from './dtos/village-create.dto';
+import { VillageUpdateDTO } from './dtos/village-update.dto';
+import { DistrictRepository } from '../../district/repositories/district.repository';
+import { District } from '../../district/entities/district.entity';
 
 @Injectable()
 export class VillageService {
   constructor(
     private readonly villageRepository: VillageRepository,
+    private readonly districtRepository: DistrictRepository,
     @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
-  async findAll(page = 1, limit = 10): Promise<Pagination<VillageDTO>> {
-    const findOptions: FindManyOptions<Village> = {
-      take: limit,
+  async findAll(page = 1, limit = 10): Promise<Pagination<VillageReadDTO>> {
+    const [villages, total] = await this.villageRepository.findAndCount({
       skip: (page - 1) * limit,
-    };
+      take: limit,
+    });
 
-    const [villages, total] =
-      await this.villageRepository.findAndCount(findOptions);
-
-    const mappedVillages = this.mapper.mapArray(villages, Village, VillageDTO);
+    const mappedVillages = this.mapper.mapArray(
+      villages,
+      Village,
+      VillageReadDTO,
+    );
 
     return {
       items: mappedVillages,
@@ -37,30 +42,54 @@ export class VillageService {
     };
   }
 
-  async findById(id: number): Promise<VillageDTO> {
+  async findById(id: number): Promise<VillageReadDTO> {
     const village = await this.findVillageByIdOrFail(id);
 
-    return this.mapper.mapAsync(village, Village, VillageDTO);
+    return this.mapper.mapAsync(village, Village, VillageReadDTO);
   }
 
-  async create(villageDTO: VillageDTO): Promise<VillageDTO> {
-    const entity = this.mapper.map(villageDTO, VillageDTO, Village);
+  async create(villageCreateDTO: VillageCreateDTO): Promise<VillageReadDTO> {
+    const entity = this.mapper.map(villageCreateDTO, VillageCreateDTO, Village);
+    console.log(entity);
+    entity.district = await this.findDistrictByIdOrFail(
+      villageCreateDTO.districtId,
+    );
+
     const savedEntity = await this.villageRepository.save(entity);
 
-    return this.mapper.mapAsync(savedEntity, Village, VillageDTO);
+    return this.mapper.mapAsync(savedEntity, Village, VillageReadDTO);
   }
 
-  async update(id: number, updateVillageDTO: VillageDTO): Promise<VillageDTO> {
-    await this.findVillageByIdOrFail(id);
-    await this.villageRepository.update(id, updateVillageDTO);
-    const updateVillage = await this.villageRepository.findOneBy({ id });
+  async update(
+    id: number,
+    updateVillageDTO: VillageUpdateDTO,
+  ): Promise<VillageReadDTO> {
+    const village = await this.findVillageByIdOrFail(id);
 
-    return this.mapper.mapAsync(updateVillage, Village, VillageDTO);
+    Object.assign(village, updateVillageDTO);
+
+    village.district = await this.findDistrictByIdOrFail(
+      updateVillageDTO.districtId,
+    );
+
+    await this.villageRepository.save(village);
+
+    return this.mapper.mapAsync(village, Village, VillageReadDTO);
   }
 
   async deleteById(id: number): Promise<void> {
     await this.findVillageByIdOrFail(id);
     await this.villageRepository.delete(id);
+  }
+
+  private async findDistrictByIdOrFail(id: number): Promise<District> {
+    const district = await this.districtRepository.findOneBy({ id });
+
+    if (!district) {
+      throw new NotFoundException(`Province with ID '${id}' not found`);
+    }
+
+    return district;
   }
 
   private async findVillageByIdOrFail(id: number): Promise<Village> {
