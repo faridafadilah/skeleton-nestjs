@@ -3,7 +3,7 @@ import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { AutoMap } from '@automapper/classes';
 import { IsString } from 'class-validator';
 import { BaseEntity } from '../../../../common/base/base.entity';
-import { Foundation } from '../../foundation/entities/foundation.entity';
+import { Foundation } from '../../foundation/entities/institution.entity';
 
 @Entity('document_institution')
 export class DocumentFoundation extends BaseEntity {

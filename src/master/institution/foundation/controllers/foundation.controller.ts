@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
@@ -17,16 +16,17 @@ import { Role } from 'src/common/enum/role.enum';
 import { JwtAuthGuard } from 'src/authentication/guards/auth.guard';
 import { RolesGuard } from 'src/authentication/guards/roles.guard';
 import { FoundationReadDTO } from '../services/dto/foundation-read.dto';
-import { FoundationDTO } from '../services/dto/foundation.dto';
+import { FoundationCreateDTO } from '../services/dto/foundation-create.dto';
 import { FoundationService } from '../services/foundation.service';
 import { PaginationQueryDto } from 'src/common/base/base-pagination';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { Request } from 'express';
 import { User } from 'src/authentication/user/entities/user.entity';
+import { FoundationUpdateDTO } from '../services/dto/foundation-update.dto';
 
-@Controller('foundation')
+@Controller('foundations')
 @ApiBearerAuth()
-@ApiTags('foundation')
+@ApiTags('foundations')
 export class FoundationController {
   constructor(private readonly foundationService: FoundationService) {}
 
@@ -56,37 +56,37 @@ export class FoundationController {
     return await this.foundationService.findById(id);
   }
 
+  @PostMethod('/')
+  @Roles(Role.ADMINPENABUR)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBody({ type: FoundationCreateDTO })
+  @ApiResponse({
+    status: 201,
+    description: 'The record has been successfully created.',
+    type: FoundationCreateDTO,
+  })
+  async post(
+    @Body() foundationDto: FoundationCreateDTO,
+    @Req() req: Request,
+  ): Promise<FoundationReadDTO> {
+    const createdBy = (req.user as User).id;
+    return await this.foundationService.create(foundationDto, createdBy);
+  }
+
   @Patch(':id')
   @Roles(Role.ADMINPENABUR)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @ApiBody({ type: FoundationDTO })
+  @ApiBody({ type: FoundationUpdateDTO })
   @ApiResponse({
     status: 200,
-    description: 'Update record',
+    description: 'Update foundation',
     type: FoundationReadDTO,
   })
   async update(
     @Param('id') id: string,
-    @Body() foundationDto: FoundationDTO,
+    @Body() foundationUpdateDTO: FoundationUpdateDTO,
   ): Promise<FoundationReadDTO> {
-    return await this.foundationService.update(id, foundationDto);
-  }
-
-  @PostMethod('/')
-  @Roles(Role.ADMINPENABUR)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @ApiBody({ type: FoundationDTO })
-  @ApiResponse({
-    status: 201,
-    description: 'The record has been successfully created.',
-    type: FoundationDTO,
-  })
-  async post(
-    @Body() foundationDto: FoundationDTO,
-    @Req() req: Request,
-  ): Promise<FoundationReadDTO> {
-    const createdBy = (req.user as User).id;
-    return await this.foundationService.save(foundationDto, createdBy);
+    return await this.foundationService.update(id, foundationUpdateDTO);
   }
 
   @Delete('/:id')
@@ -94,7 +94,7 @@ export class FoundationController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({
     status: 204,
-    description: 'The record has been successfully deleted.',
+    description: 'The foundation has been successfully deleted.',
   })
   async deleteById(@Param('id') id: string): Promise<void> {
     return await this.foundationService.deleteById(id);

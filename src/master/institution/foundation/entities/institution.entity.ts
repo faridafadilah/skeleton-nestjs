@@ -7,7 +7,7 @@ import { BaseEntity } from '../../../../common/base/base.entity';
 import { DocumentFoundation } from '../../document-foundation/entities/documen.entity';
 
 @Entity('institutions')
-export class Foundation extends BaseEntity {
+export class Institution extends BaseEntity {
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()

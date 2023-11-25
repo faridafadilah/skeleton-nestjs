@@ -1,23 +1,29 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { FoundationRepository } from '../repositories/foundation.repository';
-import { Foundation } from '../entities/foundation.entity';
+import { Institution } from '../entities/institution.entity';
 import { TYPE_INSTITUTION } from 'src/common/enum/type-institution.enum';
 import { FoundationReadDTO } from './dto/foundation-read.dto';
-import { FoundationDTO } from './dto/foundation.dto';
+import { FoundationCreateDTO } from './dto/foundation-create.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { FindManyOptions } from 'typeorm';
 import { GenericSearch } from 'src/common/base/base-search';
 import { PaginationQueryDto } from 'src/common/base/base-pagination';
+import { FoundationUpdateDTO } from './dto/foundation-update.dto';
 
 @Injectable()
 export class FoundationService {
   constructor(
     private readonly foundationRepository: FoundationRepository,
     @InjectMapper() private readonly foundationMapper: Mapper,
-    protected readonly genericSearch: GenericSearch<Foundation>,
+    protected readonly genericSearch: GenericSearch<Institution>,
   ) {}
 
   async findAll(
@@ -31,7 +37,7 @@ export class FoundationService {
       sortOrder,
     } = paginationQuery;
 
-    const findOptions: FindManyOptions<Foundation> = {
+    const findOptions: FindManyOptions<Institution> = {
       where: {
         typeInstitution: TYPE_INSTITUTION.FOUNDATION,
       },
@@ -40,12 +46,12 @@ export class FoundationService {
       order: orderBy && sortOrder ? { [orderBy]: sortOrder } : undefined,
     };
 
-    let searchResult: { items: Foundation[]; totalCount: number };
+    let searchResult: { items: Institution[]; totalCount: number };
 
     if (search) {
       searchResult = await this.genericSearch.search(
         this.foundationRepository,
-        ['name', 'code'],
+        ['name', 'code', 'address', 'district', 'province', 'village'],
         search,
         limit,
         (page - 1) * limit,
@@ -61,7 +67,7 @@ export class FoundationService {
 
     const mappedFoundation = this.foundationMapper.mapArray(
       searchResult.items,
-      Foundation,
+      Institution,
       FoundationReadDTO,
     );
 
@@ -86,57 +92,59 @@ export class FoundationService {
     });
     return this.foundationMapper.mapAsync(
       result,
-      Foundation,
+      Institution,
       FoundationReadDTO,
     );
   }
 
-  async save(
-    foundationDTO: FoundationDTO,
+  async create(
+    foundationDTO: FoundationCreateDTO,
     createdBy: string,
   ): Promise<FoundationReadDTO | undefined> {
     const entity = this.foundationMapper.map(
       foundationDTO,
-      FoundationDTO,
-      Foundation,
+      FoundationCreateDTO,
+      Institution,
     );
+
     entity.typeInstitution = TYPE_INSTITUTION.FOUNDATION;
     entity.createdBy = createdBy;
     const result = await this.foundationRepository.save(entity);
+
     return this.foundationMapper.mapAsync(
       result,
-      Foundation,
+      Institution,
       FoundationReadDTO,
     );
   }
 
   async update(
     id: string,
-    updateDto: FoundationDTO,
+    updateDto: FoundationUpdateDTO,
   ): Promise<FoundationReadDTO | undefined> {
     if (!id) throw new Error(`update error: id is empty.`);
-    try {
-      await this.foundationRepository.update(id, updateDto);
-      const foundation = await this.foundationRepository.findOneBy({ id });
-      return this.foundationMapper.mapAsync(
-        foundation,
-        Foundation,
-        FoundationReadDTO,
-      );
-    } catch (ex) {
-      throw new Error(`findAll error: ${ex.message}.`);
-    }
+    await this.findFoundationByIdOrFail(id);
+    await this.foundationRepository.update(id, updateDto);
+    const foundation = await this.foundationRepository.findOneBy({ id });
+    return this.foundationMapper.mapAsync(
+      foundation,
+      Institution,
+      FoundationReadDTO,
+    );
   }
 
   async deleteById(id: string): Promise<void | undefined> {
+    await this.findFoundationByIdOrFail(id);
     await this.foundationRepository.delete(id);
-    const entityFind = await this.findById(id);
-    if (entityFind) {
-      throw new HttpException(
-        'Error, entity not deleted!',
-        HttpStatus.NOT_FOUND,
-      );
+  }
+
+  private async findFoundationByIdOrFail(id: string): Promise<Institution> {
+    const foundation = await this.foundationRepository.findOneBy({ id });
+
+    if (!foundation) {
+      throw new NotFoundException(`foundation with ID '${id}' not found`);
     }
-    return;
+
+    return foundation;
   }
 }
