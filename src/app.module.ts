@@ -16,6 +16,12 @@ import { VillageModule } from './master/region/village/village.module';
 import { DocumentFoundationModule } from './master/institution/document-foundation/document-foundation.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import {
+  AcceptLanguageResolver,
+  HeaderResolver,
+  I18nModule,
+  QueryResolver,
+} from 'nestjs-i18n';
 
 @Module({
   imports: [
@@ -34,13 +40,24 @@ import { join } from 'path';
     DistrictModule,
     VillageModule,
     DocumentFoundationModule,
+    I18nModule.forRoot({
+      fallbackLanguage: 'id',
+      loaderOptions: {
+        path: join(__dirname, '/common/locale/'),
+        watch: true,
+      },
+      resolvers: [
+        { use: QueryResolver, options: ['lang'] },
+        AcceptLanguageResolver,
+        new HeaderResolver(['x-lang']),
+      ],
+    }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'public/uploads/'),
       serveRoot: '/public/uploads/',
       exclude: ['/api*'],
     }),
   ],
-  controllers: [],
   providers: [
     {
       provide: APP_INTERCEPTOR,

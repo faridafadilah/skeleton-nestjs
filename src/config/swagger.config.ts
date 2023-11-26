@@ -4,8 +4,8 @@ import { INestApplication } from '@nestjs/common';
 
 export function setupSwagger(app: INestApplication): void {
   const config = new DocumentBuilder()
-    .setTitle('My API')
-    .setDescription('MY API')
+    .setTitle('BPK API')
+    .setDescription('BPK API Documentation')
     .setVersion('0.1')
     .addBearerAuth()
     .build();

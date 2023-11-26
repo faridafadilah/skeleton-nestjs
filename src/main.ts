@@ -1,14 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
 import { setupSwagger } from './config/swagger.config';
-import { GlobalExceptionFilter } from './common/global-exception.filter';
+import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
-  app.useGlobalFilters(new GlobalExceptionFilter());
+  app.useGlobalPipes(new I18nValidationPipe({ transform: true }));
+  app.useGlobalFilters(
+    new I18nValidationExceptionFilter({
+      detailedErrors: false,
+    }),
+  );
+
   setupSwagger(app);
   await app.listen(3000);
 }
