@@ -10,7 +10,7 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { ProvinceService } from '../services/province.service';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProvinceReadDTO } from '../services/dtos/province-read.dto';
 import { ProvinceCreateDTO } from '../services/dtos/province-create.dto';
 import { ProvinceUpdateDTO } from '../services/dtos/province-update.dto';
@@ -22,6 +22,7 @@ export class ProvinceController {
   constructor(private readonly provinceService: ProvinceService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get all province' })
   @ApiResponse({
     status: 200,
     description: 'List all provinces',
@@ -35,6 +36,7 @@ export class ProvinceController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get province by id' })
   @ApiResponse({
     status: 200,
     description: 'The found record',
@@ -47,6 +49,7 @@ export class ProvinceController {
   }
 
   @Post()
+  @ApiOperation({ summary: 'Create province' })
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
@@ -59,6 +62,7 @@ export class ProvinceController {
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update province by id' })
   @ApiResponse({
     status: 200,
     description: 'Update Province',
@@ -72,6 +76,7 @@ export class ProvinceController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete province by id' })
   @ApiResponse({
     status: 204,
     description: 'The record has been successfully deleted.',

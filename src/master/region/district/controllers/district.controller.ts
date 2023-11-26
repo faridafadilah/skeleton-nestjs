@@ -9,7 +9,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { DistrictService } from '../services/district.service';
 import { DistrictReadDTO } from '../services/dtos/district-read.dto';
 import { DistrictCreateDTO } from '../services/dtos/district-create.dto';
@@ -27,6 +27,7 @@ export class DistrictController {
     description: 'List all districts',
     type: DistrictReadDTO,
   })
+  @ApiOperation({ summary: 'Get all district' })
   async findAll(@Query() paginationQuery: PaginationQueryDto): Promise<any> {
     return await this.districtService.findAll(
       paginationQuery.page,
@@ -40,6 +41,7 @@ export class DistrictController {
     description: 'The found record',
     type: DistrictReadDTO,
   })
+  @ApiOperation({ summary: 'Get district by id' })
   async getOne(
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<DistrictReadDTO> {
@@ -52,6 +54,7 @@ export class DistrictController {
     description: 'The record has been successfully created.',
     type: DistrictCreateDTO,
   })
+  @ApiOperation({ summary: 'Create district' })
   async post(
     @Body() districtCreateDTO: DistrictCreateDTO,
   ): Promise<DistrictReadDTO> {
@@ -64,6 +67,7 @@ export class DistrictController {
     description: 'Update district',
     type: DistrictUpdateDTO,
   })
+  @ApiOperation({ summary: 'Update district by id' })
   async update(
     @Param('id', new ParseIntPipe()) id: number,
     @Body() districtUpdateDTO: DistrictUpdateDTO,
@@ -72,6 +76,7 @@ export class DistrictController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete foundation by id' })
   @ApiResponse({
     status: 203,
     description: 'The record has been successfully deleted.',

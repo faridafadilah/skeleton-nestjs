@@ -10,7 +10,7 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { VillageService } from '../services/village.service';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { VillageReadDTO } from '../services/dtos/village-read.dto';
 import { VillageCreateDTO } from '../services/dtos/village-create.dto';
 import { VillageUpdateDTO } from '../services/dtos/village-update.dto';
@@ -27,6 +27,7 @@ export class VillageController {
     description: 'List all villages',
     type: VillageReadDTO,
   })
+  @ApiOperation({ summary: 'Get all village' })
   async findAll(@Query() paginationQuery: PaginationQueryDto): Promise<any> {
     return await this.villageService.findAll(
       paginationQuery.page,
@@ -40,6 +41,7 @@ export class VillageController {
     description: 'The found record',
     type: VillageReadDTO,
   })
+  @ApiOperation({ summary: 'Get village by id' })
   async getOne(
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<VillageReadDTO> {
@@ -52,6 +54,7 @@ export class VillageController {
     description: 'The record has been successfully created.',
     type: VillageCreateDTO,
   })
+  @ApiOperation({ summary: 'Create village' })
   async post(
     @Body() villageCreateDTO: VillageCreateDTO,
   ): Promise<VillageReadDTO> {
@@ -64,6 +67,7 @@ export class VillageController {
     description: 'Update village',
     type: VillageUpdateDTO,
   })
+  @ApiOperation({ summary: 'Update village by id' })
   async update(
     @Param('id', new ParseIntPipe()) id: number,
     @Body() villageDTO: VillageUpdateDTO,
@@ -72,6 +76,7 @@ export class VillageController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete village by id' })
   @ApiResponse({
     status: 203,
     description: 'The record has beedn successfully deleted.',

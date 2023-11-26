@@ -10,7 +10,13 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Roles } from 'src/authentication/decorators/roles.decorator';
 import { Role } from 'src/common/enum/role.enum';
 import { JwtAuthGuard } from 'src/authentication/guards/auth.guard';
@@ -38,6 +44,7 @@ export class FoundationController {
     description: 'List all foundation',
     type: FoundationReadDTO,
   })
+  @ApiOperation({ summary: 'Get all foundation' })
   async findAll(
     @Query() paginationQuery: PaginationQueryDto,
   ): Promise<Pagination<FoundationReadDTO>> {
@@ -45,8 +52,9 @@ export class FoundationController {
   }
 
   @Get('/:id')
-  @Roles(Role.ADMINPENABUR)
+  @Roles(Role.ADMINPENABUR, Role.ADMINFOUNDATION)
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiOperation({ summary: 'Get foundation by id' })
   @ApiResponse({
     status: 200,
     description: 'The found record',
@@ -60,6 +68,7 @@ export class FoundationController {
   @Roles(Role.ADMINPENABUR)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBody({ type: FoundationCreateDTO })
+  @ApiOperation({ summary: 'Create foundation' })
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
@@ -82,6 +91,7 @@ export class FoundationController {
     description: 'Update foundation',
     type: FoundationReadDTO,
   })
+  @ApiOperation({ summary: 'Update foundation by id' })
   async update(
     @Param('id') id: string,
     @Body() foundationUpdateDTO: FoundationUpdateDTO,
@@ -92,6 +102,7 @@ export class FoundationController {
   @Delete('/:id')
   @Roles(Role.ADMINPENABUR)
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiOperation({ summary: 'Delete foundation by id' })
   @ApiResponse({
     status: 204,
     description: 'The foundation has been successfully deleted.',

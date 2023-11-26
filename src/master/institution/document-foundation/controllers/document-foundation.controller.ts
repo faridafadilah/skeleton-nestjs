@@ -33,17 +33,20 @@ export class DocumentFoundationController {
   constructor(private readonly docService: DocumentFoundationService) {}
 
   @Get()
-  async findAll(): Promise<any> {
+  @ApiOperation({ summary: 'Get all document foundation' })
+  async findAll(): Promise<DocFoundationReadDTO[]> {
     return await this.docService.getAllDoc();
   }
 
   @Get('/:id')
+  @ApiOperation({ summary: 'Get all document foundation by ID' })
   async getOne(@Param('id') id: string): Promise<DocFoundationReadDTO> {
     return await this.docService.getDocById(id);
   }
 
   @Post()
   @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Create document foundation' })
   @ApiBody({ type: CreateDocFondationDTO })
   @UseInterceptors(fileUpload('documents-foundation'))
   async uploadDocument(
@@ -56,6 +59,7 @@ export class DocumentFoundationController {
   @Patch(':id')
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: DocFoundationUpdateDTO })
+  @ApiOperation({ summary: 'Update document foundation' })
   @UseInterceptors(fileUpload('documents-foundation'))
   async updateDocument(
     @Param('id') id: string,
@@ -71,6 +75,7 @@ export class DocumentFoundationController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete document foundation by id' })
   @ApiResponse({ status: 200, description: 'Document deleted successfully' })
   async deleteDocument(@Param('id') id: string): Promise<void> {
     return await this.docService.deleteDocument(id);
@@ -93,6 +98,7 @@ export class DocumentFoundationController {
   }
 
   @Get('view/:id')
+  @ApiOperation({ summary: 'View document foundation' })
   async viewDocument(@Param('id') id: string, @Res() res): Promise<void> {
     const document = await this.docService.getDocById(id);
 

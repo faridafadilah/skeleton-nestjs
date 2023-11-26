@@ -10,7 +10,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { RegencyService } from '../services/regency.service';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RegencyReadDTO } from '../services/dtos/regency-read.dto';
 import { RegencyCreateDTO } from '../services/dtos/regency-create.dto';
 import { RegencyUpdateDTO } from '../services/dtos/regency-update.dto';
@@ -27,6 +27,7 @@ export class RegencyController {
     description: 'List all regencies',
     type: RegencyReadDTO,
   })
+  @ApiOperation({ summary: 'Get all regencies' })
   async findAll(@Query() paginationQuery: PaginationQueryDto): Promise<any> {
     return await this.regencyService.findAll(
       paginationQuery.page,
@@ -35,6 +36,7 @@ export class RegencyController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get regency by id' })
   @ApiResponse({
     status: 200,
     description: 'The found record',
@@ -47,6 +49,7 @@ export class RegencyController {
   }
 
   @Post()
+  @ApiOperation({ summary: 'Create regency' })
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
@@ -59,6 +62,7 @@ export class RegencyController {
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update regency by id' })
   @ApiResponse({
     status: 200,
     description: 'Update regency',
@@ -72,6 +76,7 @@ export class RegencyController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete regency by id' })
   @ApiResponse({
     status: 203,
     description: 'The record has been successfully deleted.',
