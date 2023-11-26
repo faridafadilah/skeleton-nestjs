@@ -3,10 +3,10 @@ import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { AutoMap } from '@automapper/classes';
 import { IsString } from 'class-validator';
 import { BaseEntity } from '../../../../common/base/base.entity';
-import { Foundation } from '../../foundation/entities/institution.entity';
+import { Institution } from '../../foundation/entities/institution.entity';
 
 @Entity('document_institution')
-export class DocumentFoundation extends BaseEntity {
+export class DocumentInstitution extends BaseEntity {
   @AutoMap()
   @Column({ type: 'varchar' })
   @IsString()
@@ -18,14 +18,23 @@ export class DocumentFoundation extends BaseEntity {
   document: string;
 
   @AutoMap()
-  @Column({ name: 'expired_at' })
+  @Column({ name: 'start_date' })
   @IsString()
-  expiredAt: Date;
+  startDate: Date;
 
-  @AutoMap(() => Foundation)
-  @ManyToOne(() => Foundation, (foundation) => foundation.documentFoundations, {
-    nullable: false,
-  })
-  @JoinColumn({ name: 'foundationId' })
-  foundation: Foundation;
+  @AutoMap()
+  @Column({ name: 'end_date' })
+  @IsString()
+  endDate: Date;
+
+  @AutoMap(() => Institution)
+  @ManyToOne(
+    () => Institution,
+    (institution) => institution.documentInstitutions,
+    {
+      nullable: false,
+    },
+  )
+  @JoinColumn({ name: 'institutionId' })
+  institution: Institution;
 }

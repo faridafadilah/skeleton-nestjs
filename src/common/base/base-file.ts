@@ -1,12 +1,14 @@
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import * as path from 'path';
+import * as fs from 'fs';
 
 export const fileUpload = (
   folder: string,
   fieldName: string = 'file',
   destination = './public/uploads/',
-  extension: string[] = ['docs', 'pdf', 'docx', 'xls', 'xlsx'],
+  extension: string[] = ['pdf'],
   maxFileSize: number = 1024 * 1024 * 5,
 ) => {
   return FileInterceptor(fieldName, {
@@ -36,4 +38,14 @@ export const fileUpload = (
       fileSize: maxFileSize,
     },
   });
+};
+
+export const fileDelete = (folder: string, file: string) => {
+  const deleteFile = path.join(
+    __dirname,
+    `../../../public/uploads/${folder}`,
+    file,
+  );
+
+  fs.unlinkSync(deleteFile);
 };

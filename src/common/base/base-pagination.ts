@@ -9,6 +9,9 @@ import {
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { SortOrder } from '../enum/sort.order.enum';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 export class PaginationQueryDto {
   @ApiPropertyOptional({

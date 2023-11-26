@@ -1,18 +1,20 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DocumentFoundation } from './entities/documen.entity';
-import { DocFoundationController } from './document.controller';
-import { DocumentFoundationService } from './document.service';
-import { DocumentFoundationRepository } from './document.repository';
+import { DocumentFoundationService } from './services/document-foundation.service';
+import { DocumentFoundationRepository } from './repositories/document-foundation.repository';
 import { FoundationRepository } from '../foundation/repositories/foundation.repository';
+import { DocumentInstitution } from './entities/documen.entity';
+import { DocumentFoundationController } from './controllers/document-foundation.controller';
+import { DocumentFoundationMapper } from './services/mapper/document-mapper';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([DocumentFoundation])],
-  controllers: [DocFoundationController],
+  imports: [TypeOrmModule.forFeature([DocumentInstitution])],
+  controllers: [DocumentFoundationController],
   providers: [
     DocumentFoundationService,
     DocumentFoundationRepository,
+    DocumentFoundationMapper,
     FoundationRepository,
   ],
 })

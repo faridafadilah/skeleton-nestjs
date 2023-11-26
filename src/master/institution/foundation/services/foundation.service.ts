@@ -1,10 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {
-  Injectable,
-  HttpException,
-  HttpStatus,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { FoundationRepository } from '../repositories/foundation.repository';
@@ -51,7 +46,7 @@ export class FoundationService {
     if (search) {
       searchResult = await this.genericSearch.search(
         this.foundationRepository,
-        ['name', 'code', 'address', 'district', 'province', 'village'],
+        ['name'],
         search,
         limit,
         (page - 1) * limit,

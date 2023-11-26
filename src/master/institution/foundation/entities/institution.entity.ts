@@ -4,7 +4,7 @@ import { AutoMap } from '@automapper/classes';
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { TYPE_INSTITUTION } from 'src/common/enum/type-institution.enum';
 import { BaseEntity } from '../../../../common/base/base.entity';
-import { DocumentFoundation } from '../../document-foundation/entities/documen.entity';
+import { DocumentInstitution } from '../../document-foundation/entities/documen.entity';
 
 @Entity('institutions')
 export class Institution extends BaseEntity {
@@ -82,7 +82,7 @@ export class Institution extends BaseEntity {
   @IsString()
   levelName?: string;
 
-  @AutoMap(() => DocumentFoundation)
-  @OneToMany(() => DocumentFoundation, (regency) => regency.foundation)
-  documentFoundations: DocumentFoundation[];
+  @AutoMap(() => DocumentInstitution)
+  @OneToMany(() => DocumentInstitution, (doc) => doc.institution)
+  documentInstitutions: DocumentInstitution[];
 }
