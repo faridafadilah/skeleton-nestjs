@@ -1,99 +1,86 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { fileDelete } from 'src/common/base/base-file';
-import { CreateDocFondationDTO } from './dto/document-create.dto';
 import { Mapper } from '@automapper/core';
-import { DocumentFoundationRepository } from '../repositories/document-foundation.repository';
-import { FoundationRepository } from '../../foundation/repositories/foundation.repository';
-import { DocumentInstitution } from '../entities/documen.entity';
 import { Institution } from '../../foundation/entities/institution.entity';
-import { DocFoundationReadDTO } from './dto/document-read.dto';
-import { DocFoundationUpdateDTO } from './dto/document-update.dto';
 import { InjectMapper } from '@automapper/nestjs';
 import { TYPE_INSTITUTION } from 'src/common/enum/type-institution.enum';
+import { DocumentSchoolRepository } from '../repositories/document-school.repository';
+import { SchoolRepository } from '../../school/repositories/school.repository';
+import { DocumentInstitution } from '../../document-foundation/entities/documen.entity';
+import { DocSchoolReadDTO } from './dto/document-read.dto';
+import { DocSchoolCreateDTO } from './dto/document-create.dto';
+import { DocSchoolUpdateDTO } from './dto/document-update.dto';
 
 @Injectable()
-export class DocumentFoundationService {
+export class DocumentSchoolService {
   constructor(
-    private readonly foundationDocRepository: DocumentFoundationRepository,
-    private readonly foundationRepository: FoundationRepository,
+    private readonly docRepository: DocumentSchoolRepository,
+    private readonly schoolRepository: SchoolRepository,
     @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
   async getAllDoc() {
-    const result = await this.foundationDocRepository
+    const result = await this.docRepository
       .createQueryBuilder('document_institution')
       .innerJoinAndSelect('document_institution.institution', 'institution')
       .where('institution.typeInstitution = :type', {
-        type: TYPE_INSTITUTION.FOUNDATION,
+        type: TYPE_INSTITUTION.SCHOOL,
       })
       .getMany();
-    return this.mapper.mapArray(
-      result,
-      DocumentInstitution,
-      DocFoundationReadDTO,
-    );
+    return this.mapper.mapArray(result, DocumentInstitution, DocSchoolReadDTO);
   }
 
   async getDocById(id: string) {
     const document = await this.findDocumentByIdOrFail(id);
     if (!document) {
-      throw new NotFoundException(`document with ID '${id}' not found`);
+      throw new NotFoundException(`Document school with ID '${id}' not found`);
     }
     return this.mapper.mapAsync(
       document,
       DocumentInstitution,
-      DocFoundationReadDTO,
+      DocSchoolReadDTO,
     );
   }
 
   async save(
     photo: Express.Multer.File,
-    createDto: CreateDocFondationDTO,
-  ): Promise<DocFoundationReadDTO> {
+    createDto: DocSchoolCreateDTO,
+  ): Promise<DocSchoolReadDTO> {
     const entity = this.mapper.map(
       createDto,
-      CreateDocFondationDTO,
+      DocSchoolCreateDTO,
       DocumentInstitution,
     );
-    console.log(entity);
     entity.name = photo.filename;
     entity.document = photo.path;
     entity.institution = await this.findFoundationByIdOrFail(
-      createDto.foundationId,
+      createDto.schoolId,
     );
 
-    const result = await this.foundationDocRepository.save(entity);
-    return this.mapper.mapAsync(
-      result,
-      DocumentInstitution,
-      DocFoundationReadDTO,
-    );
+    const result = await this.docRepository.save(entity);
+    return this.mapper.mapAsync(result, DocumentInstitution, DocSchoolReadDTO);
   }
 
   async updateDocument(
     id: string,
     photo: Express.Multer.File,
-    updateDto: DocFoundationUpdateDTO,
+    updateDto: DocSchoolUpdateDTO,
   ): Promise<DocumentInstitution> {
     const entity = await this.findDocumentByIdOrFail(id);
 
     Object.assign(entity, updateDto);
 
     if (photo && entity.name) {
-      fileDelete('documents-foundation', entity.name);
+      fileDelete('documents-school', entity.name);
     }
     entity.institution = await this.findFoundationByIdOrFail(
-      updateDto.foundationId,
+      updateDto.schoolId,
     );
     entity.name = photo.filename;
     entity.document = photo.path;
-    await this.foundationDocRepository.save(entity);
-    return this.mapper.mapAsync(
-      entity,
-      DocumentInstitution,
-      DocFoundationReadDTO,
-    );
+    await this.docRepository.save(entity);
+    return this.mapper.mapAsync(entity, DocumentInstitution, DocSchoolReadDTO);
   }
 
   async deleteDocument(id: string): Promise<void> {
@@ -102,16 +89,16 @@ export class DocumentFoundationService {
     const oldFile = entity.name;
 
     if (oldFile) {
-      fileDelete('documents-foundation', oldFile);
+      fileDelete('documents-school', oldFile);
     }
-    await this.foundationDocRepository.remove(entity);
+    await this.docRepository.remove(entity);
   }
 
   private async findFoundationByIdOrFail(id: string): Promise<Institution> {
-    const foundation = await this.foundationRepository.findOneBy({ id });
+    const foundation = await this.schoolRepository.findOneBy({ id });
 
     if (!foundation) {
-      throw new NotFoundException(`foundation with ID '${id}' not found`);
+      throw new NotFoundException(`School with ID '${id}' not found`);
     }
 
     return foundation;
@@ -120,10 +107,10 @@ export class DocumentFoundationService {
   private async findDocumentByIdOrFail(
     id: string,
   ): Promise<DocumentInstitution> {
-    const document = await this.foundationDocRepository.findOneBy({ id });
+    const document = await this.docRepository.findOneBy({ id });
 
     if (!document) {
-      throw new NotFoundException(`document with ID '${id}' not found`);
+      throw new NotFoundException(`Document school with ID '${id}' not found`);
     }
 
     return document;
