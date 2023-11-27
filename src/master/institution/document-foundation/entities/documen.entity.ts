@@ -18,6 +18,11 @@ export class DocumentInstitution extends BaseEntity {
   document: string;
 
   @AutoMap()
+  @Column({ type: 'varchar' })
+  @IsString({ message: 'validation.IS_STRING' })
+  originalName: string;
+
+  @AutoMap()
   @Column({ name: 'start_date' })
   @IsString({ message: 'validation.IS_STRING' })
   startDate: Date;

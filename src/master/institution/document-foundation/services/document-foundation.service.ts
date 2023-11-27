@@ -62,9 +62,10 @@ export class DocumentFoundationService {
       CreateDocFondationDTO,
       DocumentInstitution,
     );
-    console.log(entity);
+    console.log(photo);
     entity.name = photo.filename;
     entity.document = photo.path;
+    entity.originalName = photo.originalname;
     entity.institution = await this.findFoundationByIdOrFail(
       createDto.foundationId,
     );
@@ -94,6 +95,7 @@ export class DocumentFoundationService {
     );
     entity.name = photo.filename;
     entity.document = photo.path;
+    entity.originalName = photo.originalname;
     await this.foundationDocRepository.save(entity);
     return this.mapper.mapAsync(
       entity,

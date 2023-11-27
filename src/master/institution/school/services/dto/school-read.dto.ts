@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 import { AutoMap } from '@automapper/classes';
-import { IsString } from 'class-validator';
 import { BaseEntity } from 'src/common/base/base.entity';
 
 export class SchoolReadDTO extends BaseEntity {

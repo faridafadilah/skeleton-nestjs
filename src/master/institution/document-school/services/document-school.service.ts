@@ -60,6 +60,7 @@ export class DocumentSchoolService {
     );
     entity.name = photo.filename;
     entity.document = photo.path;
+    entity.originalName = photo.originalname;
     entity.institution = await this.findSchoolByIdOrFail(createDto.schoolId);
 
     const result = await this.docRepository.save(entity);
@@ -81,6 +82,7 @@ export class DocumentSchoolService {
     entity.institution = await this.findSchoolByIdOrFail(updateDto.schoolId);
     entity.name = photo.filename;
     entity.document = photo.path;
+    entity.originalName = photo.originalname;
     await this.docRepository.save(entity);
     return this.mapper.mapAsync(entity, DocumentInstitution, DocSchoolReadDTO);
   }

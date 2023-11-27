@@ -1,5 +1,4 @@
 import { AutoMap } from '@automapper/classes';
-import { IsString } from 'class-validator';
 import { Institution } from 'src/master/institution/foundation/entities/institution.entity';
 
 export class DocFoundationReadDTO {
@@ -14,6 +13,9 @@ export class DocFoundationReadDTO {
 
   @AutoMap()
   startDate: Date;
+
+  @AutoMap()
+  originalName: string;
 
   @AutoMap()
   endDate: Date;
