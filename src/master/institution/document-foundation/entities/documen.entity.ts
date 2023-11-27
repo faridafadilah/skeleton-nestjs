@@ -9,22 +9,22 @@ import { Institution } from '../../foundation/entities/institution.entity';
 export class DocumentInstitution extends BaseEntity {
   @AutoMap()
   @Column({ type: 'varchar' })
-  @IsString()
+  @IsString({ message: 'validation.IS_STRING' })
   name: string;
 
   @AutoMap()
   @Column({ type: 'varchar' })
-  @IsString()
+  @IsString({ message: 'validation.IS_STRING' })
   document: string;
 
   @AutoMap()
   @Column({ name: 'start_date' })
-  @IsString()
+  @IsString({ message: 'validation.IS_STRING' })
   startDate: Date;
 
   @AutoMap()
   @Column({ name: 'end_date' })
-  @IsString()
+  @IsString({ message: 'validation.IS_STRING' })
   endDate: Date;
 
   @AutoMap(() => Institution)

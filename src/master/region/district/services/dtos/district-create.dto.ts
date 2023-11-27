@@ -1,13 +1,14 @@
 import { AutoMap } from '@automapper/classes';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class DistrictCreateDTO {
   @AutoMap()
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'validation.IS_STRING' })
+  @IsNotEmpty({ message: 'validation.IS_NOT_EMPTY' })
   name: string;
 
   @AutoMap()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'validation.IS_NOT_EMPTY' })
+  @IsNumber({}, { message: 'validation.IS_NUMBEr' })
   regencyId: number;
 }
