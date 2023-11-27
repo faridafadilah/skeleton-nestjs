@@ -16,6 +16,7 @@ import { VillageModule } from './master/region/village/village.module';
 import { DocumentFoundationModule } from './master/institution/document-foundation/document-foundation.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { SchoolModule } from './master/institution/school/school.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { join } from 'path';
     DistrictModule,
     VillageModule,
     DocumentFoundationModule,
+    SchoolModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'public/uploads/'),
       serveRoot: '/public/uploads/',

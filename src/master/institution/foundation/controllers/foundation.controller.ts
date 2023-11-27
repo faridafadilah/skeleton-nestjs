@@ -37,7 +37,7 @@ export class FoundationController {
   constructor(private readonly foundationService: FoundationService) {}
 
   @Get()
-  @Roles(Role.ADMINPENABUR)
+  @Roles(Role.ADMINPENABUR, Role.ADMINFOUNDATION)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({
     status: 200,

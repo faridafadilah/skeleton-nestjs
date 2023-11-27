@@ -85,6 +85,9 @@ export class FoundationService {
         typeInstitution: TYPE_INSTITUTION.FOUNDATION,
       },
     });
+    if (!result) {
+      throw new NotFoundException(`foundation with ID '${id}' not found`);
+    }
     return this.foundationMapper.mapAsync(
       result,
       Institution,
