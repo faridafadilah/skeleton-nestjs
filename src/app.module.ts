@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AutomapperModule } from '@automapper/nestjs';
@@ -22,6 +22,7 @@ import {
   I18nModule,
   QueryResolver,
 } from 'nestjs-i18n';
+import { LoggerMiddleware } from './common/logger/logger.middleware';
 
 @Module({
   imports: [
@@ -65,4 +66,8 @@ import {
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
