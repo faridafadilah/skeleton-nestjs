@@ -11,6 +11,7 @@ import { DocFoundationReadDTO } from './dto/document-read.dto';
 import { DocFoundationUpdateDTO } from './dto/document-update.dto';
 import { InjectMapper } from '@automapper/nestjs';
 import { TYPE_INSTITUTION } from 'src/common/enum/type-institution.enum';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class DocumentFoundationService {
@@ -18,6 +19,7 @@ export class DocumentFoundationService {
     private readonly foundationDocRepository: DocumentFoundationRepository,
     private readonly foundationRepository: FoundationRepository,
     @InjectMapper() private readonly mapper: Mapper,
+    private readonly i18n: I18nService,
   ) {}
 
   async getAllDoc() {
@@ -38,7 +40,11 @@ export class DocumentFoundationService {
   async getDocById(id: string) {
     const document = await this.findDocumentByIdOrFail(id);
     if (!document) {
-      throw new NotFoundException(`document with ID '${id}' not found`);
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'document foundation' },
+        }),
+      );
     }
     return this.mapper.mapAsync(
       document,
@@ -75,7 +81,7 @@ export class DocumentFoundationService {
     id: string,
     photo: Express.Multer.File,
     updateDto: DocFoundationUpdateDTO,
-  ): Promise<DocumentInstitution> {
+  ): Promise<DocFoundationReadDTO> {
     const entity = await this.findDocumentByIdOrFail(id);
 
     Object.assign(entity, updateDto);
@@ -111,7 +117,11 @@ export class DocumentFoundationService {
     const foundation = await this.foundationRepository.findOneBy({ id });
 
     if (!foundation) {
-      throw new NotFoundException(`foundation with ID '${id}' not found`);
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'foundation' },
+        }),
+      );
     }
 
     return foundation;
@@ -123,7 +133,11 @@ export class DocumentFoundationService {
     const document = await this.foundationDocRepository.findOneBy({ id });
 
     if (!document) {
-      throw new NotFoundException(`document with ID '${id}' not found`);
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'document foundation' },
+        }),
+      );
     }
 
     return document;

@@ -11,6 +11,7 @@ import { DocumentInstitution } from '../../document-foundation/entities/documen.
 import { DocSchoolReadDTO } from './dto/document-read.dto';
 import { DocSchoolCreateDTO } from './dto/document-create.dto';
 import { DocSchoolUpdateDTO } from './dto/document-update.dto';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class DocumentSchoolService {
@@ -18,6 +19,7 @@ export class DocumentSchoolService {
     private readonly docRepository: DocumentSchoolRepository,
     private readonly schoolRepository: SchoolRepository,
     @InjectMapper() private readonly mapper: Mapper,
+    private readonly i18n: I18nService,
   ) {}
 
   async getAllDoc() {
@@ -34,7 +36,11 @@ export class DocumentSchoolService {
   async getDocById(id: string) {
     const document = await this.findDocumentByIdOrFail(id);
     if (!document) {
-      throw new NotFoundException(`Document school with ID '${id}' not found`);
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'document school' },
+        }),
+      );
     }
     return this.mapper.mapAsync(
       document,
@@ -54,9 +60,7 @@ export class DocumentSchoolService {
     );
     entity.name = photo.filename;
     entity.document = photo.path;
-    entity.institution = await this.findFoundationByIdOrFail(
-      createDto.schoolId,
-    );
+    entity.institution = await this.findSchoolByIdOrFail(createDto.schoolId);
 
     const result = await this.docRepository.save(entity);
     return this.mapper.mapAsync(result, DocumentInstitution, DocSchoolReadDTO);
@@ -66,7 +70,7 @@ export class DocumentSchoolService {
     id: string,
     photo: Express.Multer.File,
     updateDto: DocSchoolUpdateDTO,
-  ): Promise<DocumentInstitution> {
+  ): Promise<DocSchoolReadDTO> {
     const entity = await this.findDocumentByIdOrFail(id);
 
     Object.assign(entity, updateDto);
@@ -74,9 +78,7 @@ export class DocumentSchoolService {
     if (photo && entity.name) {
       fileDelete('documents-school', entity.name);
     }
-    entity.institution = await this.findFoundationByIdOrFail(
-      updateDto.schoolId,
-    );
+    entity.institution = await this.findSchoolByIdOrFail(updateDto.schoolId);
     entity.name = photo.filename;
     entity.document = photo.path;
     await this.docRepository.save(entity);
@@ -94,14 +96,18 @@ export class DocumentSchoolService {
     await this.docRepository.remove(entity);
   }
 
-  private async findFoundationByIdOrFail(id: string): Promise<Institution> {
-    const foundation = await this.schoolRepository.findOneBy({ id });
+  private async findSchoolByIdOrFail(id: string): Promise<Institution> {
+    const school = await this.schoolRepository.findOneBy({ id });
 
-    if (!foundation) {
-      throw new NotFoundException(`School with ID '${id}' not found`);
+    if (!school) {
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'school' },
+        }),
+      );
     }
 
-    return foundation;
+    return school;
   }
 
   private async findDocumentByIdOrFail(
@@ -110,7 +116,11 @@ export class DocumentSchoolService {
     const document = await this.docRepository.findOneBy({ id });
 
     if (!document) {
-      throw new NotFoundException(`Document school with ID '${id}' not found`);
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'document school' },
+        }),
+      );
     }
 
     return document;

@@ -12,6 +12,7 @@ import { Institution } from '../../foundation/entities/institution.entity';
 import { SchoolReadDTO } from './dto/school-read.dto';
 import { SchoolCreateDTO } from './dto/school-create.dto';
 import { SchoolUpdateDTO } from './dto/school-update.dto';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class SchoolService {
@@ -19,6 +20,7 @@ export class SchoolService {
     private readonly schoolRepository: SchoolRepository,
     @InjectMapper() private readonly mapper: Mapper,
     protected readonly genericSearch: GenericSearch<Institution>,
+    private readonly i18n: I18nService,
   ) {}
 
   async findAll(
@@ -86,7 +88,11 @@ export class SchoolService {
       },
     });
     if (!result) {
-      throw new NotFoundException(`school with ID '${id}' not found`);
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'school' },
+        }),
+      );
     }
     return this.mapper.mapAsync(result, Institution, SchoolReadDTO);
   }
@@ -108,7 +114,10 @@ export class SchoolService {
     id: string,
     updateDto: SchoolUpdateDTO,
   ): Promise<SchoolReadDTO | undefined> {
-    if (!id) throw new Error(`update error: id is empty.`);
+    if (!id)
+      throw new Error(
+        this.i18n.t('general.ID_EMPTY', { args: { property: id } }),
+      );
     await this.findSchoolById(id);
     await this.schoolRepository.update(id, updateDto);
     const school = await this.schoolRepository.findOneBy({ id });
@@ -124,7 +133,11 @@ export class SchoolService {
     const school = await this.schoolRepository.findOneBy({ id });
 
     if (!school) {
-      throw new NotFoundException(`school with ID '${id}' not found`);
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'school' },
+        }),
+      );
     }
 
     return school;

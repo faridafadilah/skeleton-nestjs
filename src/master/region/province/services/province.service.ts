@@ -7,12 +7,14 @@ import { Mapper } from '@automapper/core';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { ProvinceCreateDTO } from './dtos/province-create.dto';
 import { ProvinceUpdateDTO } from './dtos/province-update.dto';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class ProvinceService {
   constructor(
     private readonly provinceRepository: ProvinceRepository,
     @InjectMapper() private readonly mapper: Mapper,
+    private readonly i18n: I18nService,
   ) {}
 
   async findAll(page = 1, limit = 10): Promise<Pagination<ProvinceReadDTO>> {
@@ -73,7 +75,11 @@ export class ProvinceService {
     const province = await this.provinceRepository.findOneBy({ id });
 
     if (!province) {
-      throw new NotFoundException(`Province with ID '${id}' not found`);
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'province' },
+        }),
+      );
     }
 
     return province;

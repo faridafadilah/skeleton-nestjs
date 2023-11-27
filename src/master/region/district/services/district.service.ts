@@ -9,6 +9,7 @@ import { DistrictCreateDTO } from './dtos/district-create.dto';
 import { DistrictUpdateDTO } from './dtos/district-update.dto';
 import { RegencyRepository } from '../../regency/repositories/regency.repository';
 import { Regency } from '../../regency/entities/regency.entity';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class DistrictService {
@@ -16,6 +17,7 @@ export class DistrictService {
     private readonly districtRepository: DistrictRepository,
     private readonly regencyRepository: RegencyRepository,
     @InjectMapper() private readonly mapper: Mapper,
+    private readonly i18n: I18nService,
   ) {}
 
   async findAll(page = 1, limit = 10): Promise<Pagination<DistrictReadDTO>> {
@@ -91,7 +93,11 @@ export class DistrictService {
     const regency = await this.regencyRepository.findOneBy({ id });
 
     if (!regency) {
-      throw new NotFoundException(`Regency with ID '${id}' not found`);
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'district' },
+        }),
+      );
     }
 
     return regency;
@@ -101,7 +107,11 @@ export class DistrictService {
     const district = await this.districtRepository.findOneBy({ id });
 
     if (!district) {
-      throw new NotFoundException(`Province with ID '${id}' not found`);
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'district' },
+        }),
+      );
     }
 
     return district;

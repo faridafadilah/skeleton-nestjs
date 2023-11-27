@@ -4,22 +4,18 @@ import { Institution } from 'src/master/institution/foundation/entities/institut
 
 export class DocSchoolReadDTO {
   @AutoMap()
-  id?: string;
+  id: string;
 
   @AutoMap()
-  @IsString()
   name: string;
 
   @AutoMap()
-  @IsString()
   document: string;
 
   @AutoMap()
-  @IsString()
   startDate: Date;
 
   @AutoMap()
-  @IsString()
   endDate: Date;
 
   @AutoMap(() => Institution)

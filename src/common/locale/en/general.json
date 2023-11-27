@@ -1,0 +1,5 @@
+{
+    "NOT_FOUND": "Data Not Found!",
+    "NOT_FOUND_ID": "Data {name} with ID {property} not found!",
+    "ID_EMPTY": "ID {property} not empty!"
+}

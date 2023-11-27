@@ -12,6 +12,7 @@ import { FindManyOptions } from 'typeorm';
 import { GenericSearch } from 'src/common/base/base-search';
 import { PaginationQueryDto } from 'src/common/base/base-pagination';
 import { FoundationUpdateDTO } from './dto/foundation-update.dto';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class FoundationService {
@@ -19,6 +20,7 @@ export class FoundationService {
     private readonly foundationRepository: FoundationRepository,
     @InjectMapper() private readonly foundationMapper: Mapper,
     protected readonly genericSearch: GenericSearch<Institution>,
+    private readonly i18n: I18nService,
   ) {}
 
   async findAll(
@@ -86,7 +88,11 @@ export class FoundationService {
       },
     });
     if (!result) {
-      throw new NotFoundException(`foundation with ID '${id}' not found`);
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'foundation' },
+        }),
+      );
     }
     return this.foundationMapper.mapAsync(
       result,
@@ -120,7 +126,12 @@ export class FoundationService {
     id: string,
     updateDto: FoundationUpdateDTO,
   ): Promise<FoundationReadDTO | undefined> {
-    if (!id) throw new Error(`update error: id is empty.`);
+    if (!id)
+      throw new Error(
+        this.i18n.t('general.ID_EMPTY', {
+          args: { property: id, name: 'foundation' },
+        }),
+      );
     await this.findFoundationByIdOrFail(id);
     await this.foundationRepository.update(id, updateDto);
     const foundation = await this.foundationRepository.findOneBy({ id });
@@ -140,7 +151,11 @@ export class FoundationService {
     const foundation = await this.foundationRepository.findOneBy({ id });
 
     if (!foundation) {
-      throw new NotFoundException(`foundation with ID '${id}' not found`);
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'foundation' },
+        }),
+      );
     }
 
     return foundation;

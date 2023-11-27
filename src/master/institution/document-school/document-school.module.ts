@@ -18,4 +18,4 @@ import { SchoolRepository } from '../school/repositories/school.repository';
     SchoolRepository,
   ],
 })
-export class DocumentFoundationModule {}
+export class DocumentSchoolModule {}

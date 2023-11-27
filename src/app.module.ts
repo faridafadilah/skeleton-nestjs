@@ -24,6 +24,7 @@ import {
 } from 'nestjs-i18n';
 import { LoggerMiddleware } from './common/logger/logger.middleware';
 import { SchoolModule } from './master/institution/school/school.module';
+import { DocumentSchoolModule } from './master/institution/document-school/document-school.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { SchoolModule } from './master/institution/school/school.module';
     DistrictModule,
     VillageModule,
     DocumentFoundationModule,
+    DocumentSchoolModule,
     I18nModule.forRoot({
       fallbackLanguage: 'id',
       loaderOptions: {

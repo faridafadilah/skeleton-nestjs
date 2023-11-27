@@ -1,0 +1,5 @@
+{
+    "NOT_FOUND": "Data tidak tersedia!",
+    "NOT_FOUND_ID": "Data {name} dengan id {property}, tidak tersedia!",
+    "ID_EMPTY": "ID {property} tidak boleh kosong!"
+}

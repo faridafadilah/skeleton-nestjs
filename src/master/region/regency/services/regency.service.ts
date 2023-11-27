@@ -9,6 +9,7 @@ import { RegencyCreateDTO } from './dtos/regency-create.dto';
 import { RegencyUpdateDTO } from './dtos/regency-update.dto';
 import { Province } from '../../province/entities/province.entity';
 import { ProvinceRepository } from '../../province/repositories/province.repository';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class RegencyService {
@@ -16,6 +17,7 @@ export class RegencyService {
     private readonly regencyRepository: RegencyRepository,
     private readonly provinceRepository: ProvinceRepository,
     @InjectMapper() private readonly mapper: Mapper,
+    private readonly i18n: I18nService,
   ) {}
 
   async findAll(page = 1, limit = 10): Promise<Pagination<RegencyReadDTO>> {
@@ -87,7 +89,11 @@ export class RegencyService {
     const province = await this.provinceRepository.findOneBy({ id });
 
     if (!province) {
-      throw new NotFoundException(`Province with ID '${id}' not found`);
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'regency' },
+        }),
+      );
     }
 
     return province;
@@ -97,7 +103,11 @@ export class RegencyService {
     const regency = await this.regencyRepository.findOneBy({ id });
 
     if (!regency) {
-      throw new NotFoundException(`Regency with ID '${id}' not found`);
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'regency' },
+        }),
+      );
     }
 
     return regency;

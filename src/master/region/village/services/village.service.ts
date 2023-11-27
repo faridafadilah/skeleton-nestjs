@@ -9,6 +9,7 @@ import { VillageCreateDTO } from './dtos/village-create.dto';
 import { VillageUpdateDTO } from './dtos/village-update.dto';
 import { DistrictRepository } from '../../district/repositories/district.repository';
 import { District } from '../../district/entities/district.entity';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class VillageService {
@@ -16,6 +17,7 @@ export class VillageService {
     private readonly villageRepository: VillageRepository,
     private readonly districtRepository: DistrictRepository,
     @InjectMapper() private readonly mapper: Mapper,
+    private readonly i18n: I18nService,
   ) {}
 
   async findAll(page = 1, limit = 10): Promise<Pagination<VillageReadDTO>> {
@@ -86,7 +88,11 @@ export class VillageService {
     const district = await this.districtRepository.findOneBy({ id });
 
     if (!district) {
-      throw new NotFoundException(`Province with ID '${id}' not found`);
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'village' },
+        }),
+      );
     }
 
     return district;
@@ -96,7 +102,11 @@ export class VillageService {
     const village = await this.villageRepository.findOneBy({ id });
 
     if (!village) {
-      throw new NotFoundException(`Village with ID '${id}' not found`);
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'village' },
+        }),
+      );
     }
 
     return village;
