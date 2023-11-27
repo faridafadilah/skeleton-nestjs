@@ -81,6 +81,18 @@ export class CurriculumController {
   async deleteById(
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<void> {
-    return await this.curriculumRepository.deleteById(id);
+    return await this.curriculumRepository.deletById(id);
+  }
+
+  @Delete('Delete-Permanently/:id')
+  @ApiOperation({ summary: 'Delete Permanent curriculum by id' })
+  @ApiResponse({
+    status: 204,
+    description: 'The curriculum has been successfully deleted.',
+  })
+  async deletePermanentById(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<void> {
+    return await this.curriculumRepository.deletePermanetById(id);
   }
 }

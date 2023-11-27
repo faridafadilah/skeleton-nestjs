@@ -17,9 +17,28 @@ export class CurriculumService {
   ) {}
 
   async findAll(): Promise<CurriculumReadDTO[]> {
-    const curriculum = await this.curriculumRepository.find();
+    const curriculum = await this.curriculumRepository.find({
+      where: { isDelete: false },
+    });
 
     return this.mapper.mapArrayAsync(curriculum, Curriculum, CurriculumReadDTO);
+  }
+
+  private async findCurriculumByIdOrFail(id: string): Promise<Curriculum> {
+    const curriculum = await this.curriculumRepository.findOneBy({
+      id,
+      isDelete: false,
+    });
+
+    if (!curriculum) {
+      throw new NotFoundException(
+        this.i18n.t('general.NOT_FOUND_ID', {
+          args: { property: id, name: 'curriculum' },
+        }),
+      );
+    }
+
+    return curriculum;
   }
 
   async findById(id: string): Promise<CurriculumReadDTO> {
@@ -54,22 +73,14 @@ export class CurriculumService {
     );
   }
 
-  async deleteById(id: string): Promise<void> {
-    await this.findCurriculumByIdOrFail(id);
-    await this.curriculumRepository.delete(id);
+  async deletById(id: string): Promise<void> {
+    const entity = await this.findCurriculumByIdOrFail(id);
+    entity.isDelete = true;
+    await this.curriculumRepository.save(entity);
   }
 
-  private async findCurriculumByIdOrFail(id: string): Promise<Curriculum> {
-    const curriculum = await this.curriculumRepository.findOneBy({ id });
-
-    if (!curriculum) {
-      throw new NotFoundException(
-        this.i18n.t('general.NOT_FOUND_ID', {
-          args: { property: id, name: 'curriculum' },
-        }),
-      );
-    }
-
-    return curriculum;
+  async deletePermanetById(id: string): Promise<void> {
+    await this.findCurriculumByIdOrFail(id);
+    await this.curriculumRepository.delete(id);
   }
 }

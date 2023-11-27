@@ -15,4 +15,8 @@ export class Curriculum extends BaseEntity {
   @AutoMap()
   @Column({ type: 'bool' })
   isMajor: boolean;
+
+  @AutoMap()
+  @Column({ type: 'bool', default: false })
+  isDelete: boolean;
 }
