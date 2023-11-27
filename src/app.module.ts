@@ -25,6 +25,7 @@ import {
 import { LoggerMiddleware } from './common/logger/logger.middleware';
 import { SchoolModule } from './master/institution/school/school.module';
 import { DocumentSchoolModule } from './master/institution/document-school/document-school.module';
+import { CurriculumModule } from './master/institution/curriculum/curriculum.module';
 
 @Module({
   imports: [
@@ -44,6 +45,8 @@ import { DocumentSchoolModule } from './master/institution/document-school/docum
     VillageModule,
     DocumentFoundationModule,
     DocumentSchoolModule,
+    SchoolModule,
+    CurriculumModule,
     I18nModule.forRoot({
       fallbackLanguage: 'id',
       loaderOptions: {
@@ -56,7 +59,6 @@ import { DocumentSchoolModule } from './master/institution/document-school/docum
         new HeaderResolver(['x-lang']),
       ],
     }),
-    SchoolModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'public/uploads/'),
       serveRoot: '/public/uploads/',
