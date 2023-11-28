@@ -19,7 +19,7 @@ export class LoggerMiddleware implements NestMiddleware {
       const elapsedTime = endTime - startTime;
 
       this.logger.log(
-        `${method} {${request.originalUrl}} ${statusCode} ${statusMessage} ${contentLength} ${referer}- ${userAgent} ${ip} - ${elapsedTime}ms`, // Include the elapsed time in the log
+        `${method} {${request.originalUrl}} ${statusCode} ${statusMessage} ${contentLength} ${referer}- ${userAgent} ${ip} - ${elapsedTime}ms`,
       );
     });
 

@@ -1,5 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
@@ -15,6 +15,13 @@ import { DistrictModule } from './master/region/district/district.module';
 import { VillageModule } from './master/region/village/village.module';
 import { DocumentFoundationModule } from './master/institution/document-foundation/document-foundation.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { LoggerMiddleware } from './common/logger/logger.middleware';
+import { SchoolModule } from './master/institution/school/school.module';
+import { DocumentSchoolModule } from './master/institution/document-school/document-school.module';
+import { CurriculumModule } from './master/institution/curriculum/curriculum.module';
+import { MasterTypeModule } from './master/institution/master-type/master-type.module';
+import { GlobalExceptionFilter } from './common/global-exception.filter';
+import { IsUniqueConstraint } from './master/institution/master-type/helpers/unique-code.validator';
 import { join } from 'path';
 import {
   AcceptLanguageResolver,
@@ -22,10 +29,6 @@ import {
   I18nModule,
   QueryResolver,
 } from 'nestjs-i18n';
-import { LoggerMiddleware } from './common/logger/logger.middleware';
-import { SchoolModule } from './master/institution/school/school.module';
-import { DocumentSchoolModule } from './master/institution/document-school/document-school.module';
-import { CurriculumModule } from './master/institution/curriculum/curriculum.module';
 
 @Module({
   imports: [
@@ -36,17 +39,6 @@ import { CurriculumModule } from './master/institution/curriculum/curriculum.mod
     AutomapperModule.forRoot({
       strategyInitializer: classes(),
     }),
-    UserModule,
-    AuthModule,
-    ProvinceModule,
-    FoundationModule,
-    RegencyModule,
-    DistrictModule,
-    VillageModule,
-    DocumentFoundationModule,
-    DocumentSchoolModule,
-    SchoolModule,
-    CurriculumModule,
     I18nModule.forRoot({
       fallbackLanguage: 'id',
       loaderOptions: {
@@ -64,11 +56,29 @@ import { CurriculumModule } from './master/institution/curriculum/curriculum.mod
       serveRoot: '/public/uploads/',
       exclude: ['/api*'],
     }),
+    UserModule,
+    AuthModule,
+    ProvinceModule,
+    FoundationModule,
+    RegencyModule,
+    DistrictModule,
+    VillageModule,
+    DocumentFoundationModule,
+    SchoolModule,
+    MasterTypeModule,
+    CurriculumModule,
+    DocumentFoundationModule,
+    DocumentSchoolModule,
   ],
   providers: [
+    IsUniqueConstraint,
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter,
     },
   ],
 })

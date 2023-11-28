@@ -1,4 +1,5 @@
 {
+  "IS_UNIQUE": "{property} has already been taken",
   "IS_DEFINED": "{property} should not be null or undefined",
   "IS_EMPTY": "{property} should not be empty",
   "IS_NOT_EMPTY": "{property} should not be empty",

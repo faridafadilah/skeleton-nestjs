@@ -52,7 +52,7 @@ $ npm run start:prod
 $ npm run migration:run
 
 # create migration
-$ npm run migration:create -- src/migrations/${migration_name}
+$ npm run migration:generate -- src/migrations/${migration_name}
 
 # revert migration
 $ npm run migration:revert

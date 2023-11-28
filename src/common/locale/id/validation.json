@@ -1,4 +1,5 @@
 {
+  "IS_UNIQUE": "{property} telah digunakan",
   "IS_DEFINED": "{property} tidak boleh null atau tidak terdefinisi",
   "IS_EMPTY": "{property} tidak boleh kosong",
   "IS_NOT_EMPTY": "{property} tidak boleh kosong",
